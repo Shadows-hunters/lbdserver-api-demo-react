@@ -6,12 +6,16 @@ import CreateDataset from '../Documentation/Dialogs/CreateDataset'
 import GetAllDatasets from '../Documentation/Dialogs/GetAllDatasets'
 import AlignDistributions from '../Documentation/Dialogs/AlignDistributions'
 import BasicTabs from '../Documentation/Dialogs/BasicTabs'
+import ViewerTab from '../Documentation/Dialogs/ViewerTab'
 
 const DemoPage = () => {
     return (
         <Grid style={{ textAlign: "justify" }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             <Grid item xs={0} sm={2} md={3} />
             <Grid item style={{ margin: 15 }} xs={4} sm={4} md={6}>
+                <div style={subComponentStyle}>
+                    <ViewerTab title={"7. Our viewer."}/>
+                </div>
                 <div style={subComponentStyle}>
                     <CreateProject title={"1. (optional) create a project (login required)"} />
                 </div>
