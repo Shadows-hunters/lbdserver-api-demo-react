@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { TextField, Stack, Button } from '@mui/material';
@@ -13,13 +13,16 @@ export default function SliderTab(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [tijdspan, setTijdspan] = useState('');
+  const toSliderTab = (data) => {
+    setTijdspan(data);
+  };
 
   const handleSubmit = () => {
     console.log(date.value);
-    
+    console.log(tijdspan);
   };
-  
- 
+   
   return (
     <Stack component="form"  spacing={1} sx={{ width: '100%' }}>
       <Typography component={"span"} variant="h5">{title}</Typography>
@@ -34,7 +37,7 @@ export default function SliderTab(props) {
           }}
         />
       <Typography>Time span</Typography>
-        <SpanSlider/>
+        <SpanSlider toSliderTab={toSliderTab}/>
       <Typography>Location</Typography>
       <Box sx={{ '& .MuiTextField-root': { m: 1} }}>
         <TextField
