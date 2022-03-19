@@ -1,3 +1,6 @@
+import DateAdapter from "@mui/lab/AdapterDayjs";
+import DatePicker from "@mui/lab/DatePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { Button, Slider, SliderThumb, Stack, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
@@ -5,6 +8,10 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 
 var SunCalc = require("suncalc");
+
+var dayjs = require("dayjs");
+//import dayjs from 'dayjs' // ES 2015
+dayjs().format();
 
 const MySlider = styled(Slider)(() => ({
   color: "#52af77",
@@ -117,9 +124,6 @@ export default function SliderTab(props) {
   const [interval, setInterval] = useState(1);
   const [result, setResult] = useState("resultaat");
 
-  const updateDate = (e, data) => {
-    setDate(data);
-  };
   const updateRange = (e, data) => {
     setRange(data);
   };
@@ -131,16 +135,15 @@ export default function SliderTab(props) {
   const handleSubmit = () => {
     let i = range[0];
     var arr = [];
-    let day = new Date(date);
+    var day = dayjs(date);
 
     while (i <= range[1]) {
-      day.setMinutes((i - 1) * 60);
-      let position = SunCalc.getPosition(day, latitude.value, longitude.value);
+      const d = day.add(i * 60, "minute");
+      console.log(d);
+      let position = SunCalc.getPosition(d, latitude.value, longitude.value);
       arr.push(position);
       i += interval;
     }
-
-    console.log(arr);
     setResult(JSON.stringify(arr));
   };
 
@@ -150,15 +153,16 @@ export default function SliderTab(props) {
         {title}
       </Typography>
       <Typography>Date</Typography>
-      <TextField
-        type="date"
-        value={date}
-        onChange={updateDate}
-        sx={{ width: 220 }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
+      <LocalizationProvider dateAdapter={DateAdapter}>
+        <DatePicker
+          value={date}
+          onChange={(newDate) => {
+            setDate(newDate);
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </LocalizationProvider>
+
       <Typography>Time span</Typography>
       <MySlider
         valueLabelDisplay="auto"
@@ -181,6 +185,7 @@ export default function SliderTab(props) {
         valueLabelDisplay="auto"
         value={interval}
         onChange={updateInterval}
+        components={{ Thumb: SpanComponent }}
         step={0.25}
         marks={marks2}
         min={0.25}
@@ -190,7 +195,7 @@ export default function SliderTab(props) {
       <Button onClick={handleSubmit} variant="outlined" color="success">
         Submit
       </Button>
-      <Typography variant="caption" fontSize={8}>
+      <Typography variant="caption" fontSize={10}>
         {result}
       </Typography>
     </Stack>
