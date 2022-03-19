@@ -4,6 +4,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 
+var SunCalc = require('suncalc');
+
 const MySlider = styled(Slider)(() => ({
   color: "#52af77",
   height: 8,
@@ -112,8 +114,7 @@ export default function SliderTab(props) {
   const [date, setDate] = useState("2022-03-17");
   const [range, setRange] = useState([7, 17]);
   const [interval, setInterval] = useState(1);
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
+  const [result, setResult] = useState("resultaat");
 
   const updateDate = (e, data) => {
     setDate(data);
@@ -124,15 +125,17 @@ export default function SliderTab(props) {
   const updateInterval = (e, data) => {
     setInterval(data);
   };
-  const updateLatitude = (e, data) => {
-    setLatitude(data);
-  };
-  const updateLongitude = (e, data) => {
-    setLongitude(data);
-  };
 
+  // sun position
   const handleSubmit = () => {
-    
+    let day = new Date(date);
+    day.setHours(7.5);
+    console.log(day);
+    console.log(latitude.value);
+    console.log(longitude.value);
+    let position = SunCalc.getPosition(day, latitude.value, longitude.value);
+    console.log(position);
+    setResult(JSON.stringify(position));
   };
 
   return (
@@ -166,13 +169,13 @@ export default function SliderTab(props) {
       <Box sx={{ "& .MuiTextField-root": { m: 1 } }}>
         <TextField
           label="Latitude"
-          defaultValue={50.850346}
-          onChange={updateLatitude}
+          id="latitude"
+          defaultValue={"50.850346"}
         />
         <TextField
           label="Longitude"
-          defaultValue={4.351721}
-          onChange={updateLongitude}
+          id="longitude"
+          defaultValue={"4.351721"}
         />
       </Box>
       <Typography>Shadows interval</Typography>
@@ -189,6 +192,7 @@ export default function SliderTab(props) {
       <Button onClick={handleSubmit} variant="outlined" color="success">
         Submit
       </Button>
+      <Typography variant="caption" fontSize={10} >{result}</Typography>
     </Stack>
   );
 }
