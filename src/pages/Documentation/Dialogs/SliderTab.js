@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 
-var SunCalc = require('suncalc');
+var SunCalc = require("suncalc");
 
 const MySlider = styled(Slider)(() => ({
   color: "#52af77",
@@ -71,6 +71,7 @@ const marks1 = [
     label: "22h",
   },
 ];
+
 const marks2 = [
   {
     value: 0.5,
@@ -128,14 +129,19 @@ export default function SliderTab(props) {
 
   // sun position
   const handleSubmit = () => {
+    let i = range[0];
+    var arr = [];
     let day = new Date(date);
-    day.setHours(7.5);
-    console.log(day);
-    console.log(latitude.value);
-    console.log(longitude.value);
-    let position = SunCalc.getPosition(day, latitude.value, longitude.value);
-    console.log(position);
-    setResult(JSON.stringify(position));
+
+    while (i <= range[1]) {
+      day.setMinutes((i - 1) * 60);
+      let position = SunCalc.getPosition(day, latitude.value, longitude.value);
+      arr.push(position);
+      i += interval;
+    }
+
+    console.log(arr);
+    setResult(JSON.stringify(arr));
   };
 
   return (
@@ -167,16 +173,8 @@ export default function SliderTab(props) {
       <Separator />
       <Typography>Location</Typography>
       <Box sx={{ "& .MuiTextField-root": { m: 1 } }}>
-        <TextField
-          label="Latitude"
-          id="latitude"
-          defaultValue={"50.850346"}
-        />
-        <TextField
-          label="Longitude"
-          id="longitude"
-          defaultValue={"4.351721"}
-        />
+        <TextField label="Latitude" id="latitude" defaultValue={"50.850346"} />
+        <TextField label="Longitude" id="longitude" defaultValue={"4.351721"} />
       </Box>
       <Typography>Shadows interval</Typography>
       <MySlider
@@ -192,7 +190,9 @@ export default function SliderTab(props) {
       <Button onClick={handleSubmit} variant="outlined" color="success">
         Submit
       </Button>
-      <Typography variant="caption" fontSize={10} >{result}</Typography>
+      <Typography variant="caption" fontSize={8}>
+        {result}
+      </Typography>
     </Stack>
   );
 }
