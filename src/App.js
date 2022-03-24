@@ -36,6 +36,7 @@ function App() {
     // { label: "experimental", path: "/", component: Project, props: { initialLayout: config } },
     { label: "documentation", path: "/documentation", component: SdkDemo, props: {} },
     // { label: "project", path: "/project", component: Project, props: {} }
+    
   ]
 
   useEffect(() => {
