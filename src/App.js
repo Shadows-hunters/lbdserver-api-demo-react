@@ -25,6 +25,9 @@ import DemoPage from './pages/DemoPage'
 
 import creds from '../devCredentials'
 
+import Viewer from './components/Viewer/3dviewer'
+
+
 function App() {
 
   const [trigger, setTrigger] = useRecoilState(t)
@@ -52,12 +55,13 @@ function App() {
   return (
     <div id={update}>
         <Header pages={pages} />
-        <Routes>
+        <Viewer/>
+        {/* <Routes>
           {pages.map(page => {
             const Element = page.component
             return <Route key={page.label} exact path={page.path} element={<Element {...page.props} />} />
           })}
-        </Routes>
+        </Routes> */}
       {/* <AuthComponent/>
       <Child/> */}
     </div>

@@ -1,13 +1,16 @@
 import React, {Suspense, useRef} from "react";
-import "./App.scss";
-import {Canvas, useFrame} from "react-three-fiber";
-import Header from "./components/header";
-import {Html, OrbitControls, useGLTFLoader} from "drei";
-import {Section} from "./components/section.js"
+// import "./App.scss";
+import {Canvas, useFrame} from "@react-three/fiber";
+import {Html, OrbitControls, useGLTF} from "@react-three/drei";
 
-const Model = ({modelPath}) => {
-  const gltf = useGLTFLoader(modelPath, true)
-  return <primitive object={gltf.scene} dispose={null}/>
+// const Model = ({modelPath}) => {
+//   const gltf = useGLTF(modelPath, true)
+//   return <primitive object={gltf.scene} dispose={null}/>
+// }
+
+function Model() {
+  const gltf = useGLTF("https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf")
+  return (<primitive object={gltf.scene} />)
 }
 
 const Lights = () => {
@@ -27,7 +30,6 @@ const HTMLContent = ({domContent, children, modelPath, positionY}) => {
   useFrame(() => (ref.current.rotation.y += 0.01))
 
   return(
-    <Section factor={1.5} offset={1}>
       <group position={[0,positionY,0]}>
         <mesh ref={ref} position={[0,-35,0]}>
           <Model modelPath={modelPath}/>
@@ -36,7 +38,6 @@ const HTMLContent = ({domContent, children, modelPath, positionY}) => {
           <div className="container"> {children} </div>
           </Html>
       </group>
-    </Section>
   )
 }
 
@@ -46,16 +47,12 @@ export default function App() {
 
   return (
     <>
-      <Header />
-      <Canvas colorManagement camera={{ position: [0,0,120], fov: 70}}>
-        <Lights/>
+      <Canvas >
+
         <Suspense fallback={null}>
-          <HTMLContent domContent={domContent} modelPath="/armchairYellow.gltf" positionY={250}>
-            <div className="container">
-              <h1 className="title">Yellow</h1>
-            </div>
-          </HTMLContent>
-          <OrbitControls/>
+        <Lights/>
+        <Model/>
+        <OrbitControls/>
         </Suspense>
       </Canvas>
     </>
