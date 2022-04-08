@@ -26,6 +26,7 @@ import DemoPage from './pages/DemoPage'
 import creds from '../devCredentials'
 
 import Viewer from './components/Viewer/3dviewer'
+import './components/Viewer/ViewerLayout.css'
 
 
 function App() {
@@ -55,13 +56,13 @@ function App() {
   return (
     <div id={update}>
         <Header pages={pages} />
-        <Viewer/>
-        {/* <Routes>
+        {/* <Viewer className="container"/> */}
+        <Routes>
           {pages.map(page => {
             const Element = page.component
             return <Route key={page.label} exact path={page.path} element={<Element {...page.props} />} />
           })}
-        </Routes> */}
+        </Routes>
       {/* <AuthComponent/>
       <Child/> */}
     </div>

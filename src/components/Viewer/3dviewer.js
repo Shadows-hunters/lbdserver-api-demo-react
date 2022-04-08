@@ -1,16 +1,11 @@
 import React, {Suspense, useRef} from "react";
-// import "./App.scss";
+import "./ViewerLayout.css";
 import {Canvas, useFrame} from "@react-three/fiber";
 import {Html, OrbitControls, useGLTF} from "@react-three/drei";
 
-// const Model = ({modelPath}) => {
-//   const gltf = useGLTF(modelPath, true)
-//   return <primitive object={gltf.scene} dispose={null}/>
-// }
-
-function Model() {
-  const gltf = useGLTF("https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf")
-  return (<primitive object={gltf.scene} />)
+const Model = ({modelPath}) => {
+  const gltf = useGLTF(modelPath, true)
+  return <primitive object={gltf.scene} dispose={null}/>
 }
 
 const Lights = () => {
@@ -46,15 +41,18 @@ export default function App() {
   const domContent = useRef()
 
   return (
-    <>
-      <Canvas >
-
+    <div>
+      <Canvas>
         <Suspense fallback={null}>
         <Lights/>
-        <Model/>
+        {/* <HTMLContent 
+          domContent={domContent}  
+          positionY={250}
+          modelPath={"https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf"}/> */}
+          <Model modelPath={"https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf"}/>
         <OrbitControls/>
         </Suspense>
       </Canvas>
-    </>
+    </div>
   );
 }
