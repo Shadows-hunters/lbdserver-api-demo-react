@@ -6,8 +6,8 @@ import CreateDataset from '../Documentation/Dialogs/CreateDataset'
 import GetAllDatasets from '../Documentation/Dialogs/GetAllDatasets'
 import AlignDistributions from '../Documentation/Dialogs/AlignDistributions'
 import BasicTabs from '../Documentation/Dialogs/BasicTabs'
-import ViewerTab from '../Documentation/Dialogs/ViewerTab'
 import SliderTab from '../Documentation/Dialogs/SliderTab'
+import Viewer from './components/Viewer/3dviewer.js'
 
 const DemoPage = () => {
     return (
@@ -18,7 +18,7 @@ const DemoPage = () => {
                     <SliderTab title={"8. Our sliders."}/>
                 </div>
                 <div style={subComponentStyle}>
-                    <ViewerTab title={"7. Our viewer."}/>
+                    <Viewer title={"7. Our viewer."}/>
                 </div>
                 {/* <div style={subComponentStyle}>
                     <CreateProject title={"1. (optional) create a project (login required)"} />
