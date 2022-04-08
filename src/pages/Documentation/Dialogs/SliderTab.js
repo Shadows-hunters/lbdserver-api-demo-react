@@ -150,7 +150,7 @@ export default function SliderTab(props) {
   return (
     <Stack spacing={1} sx={{ width: "100%" }}>
       <Typography component={"span"} variant="h5">
-        {title}
+        {title} lol
       </Typography>
       <Typography>Date</Typography>
       <LocalizationProvider dateAdapter={DateAdapter}>
