@@ -4,6 +4,8 @@ import { Canvas, useFrame } from "react-three-fiber";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
+import Viewer from "../../../components/Viewer/3dviewer"
+
 export default function ViewerTab(props) {
   const { title, description } = props;
   const [value, setValue] = React.useState(0);
