@@ -141,7 +141,12 @@ export default function SliderTab(props) {
       const d = day.add(i * 60, "minute");
       console.log(d);
       let position = SunCalc.getPosition(d, latitude.value, longitude.value);
-      arr.push(position);
+      let vector = [
+        Math.sin(position.azimuth) * Math.cos(position.altitude),
+        Math.cos(position.azimuth) * Math.cos(position.altitude),
+        Math.sin(position.altitude),
+      ];
+      arr.push(vector);
       i += interval;
     }
     setResult(JSON.stringify(arr));
@@ -150,7 +155,7 @@ export default function SliderTab(props) {
   return (
     <Stack spacing={1} sx={{ width: "100%" }}>
       <Typography component={"span"} variant="h5">
-        {title} lol
+        {title}
       </Typography>
       <Typography>Date</Typography>
       <LocalizationProvider dateAdapter={DateAdapter}>
