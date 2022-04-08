@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Viewer from "./Viewer";
-import { LBDserver } from "lbdserver-client-api"
 import { AGGREGATOR_ENDPOINT } from '../../constants';
 import { extract, createReferences } from '../../util/functions';
 import { DCAT, DCTERMS, LDP, RDFS } from '@inrupt/vocab-common-rdf'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { project as p, datasets as d, selectedElements as s} from "../../atoms"
 
-const { LbdProject, LbdService, LbdDataset, LbdConcept } = LBDserver
 
 const LBDviewer = ({ parentNode }) => {
   const [model, setModel] = useState("")
@@ -29,7 +27,7 @@ const LBDviewer = ({ parentNode }) => {
     for (const ds of activeDatasets) {
       // only one distribution per dataset at this point
       const mainDistribution = extract(ds.dataset.data, ds.dataset.url)[DCAT.distribution].map(d => d["@id"])[0]
-      const mime = extract(ds.dataset.data, mainDistribution)["http://purl.org/dc/terms/format"].map(d => d["@id"])[0]
+      const mime = extract(ds.dataset.data, mainDistribution)["http://www.w3.org/ns/dcat#mediaType"].map(d => d["@id"])[0]
       if (mime.includes("gltf")) {
         const url = extract(ds.dataset.data, mainDistribution)[DCAT.downloadURL].map(d => d["@id"])[0]
         model = url
@@ -52,7 +50,6 @@ const LBDviewer = ({ parentNode }) => {
         }
       })
     })
-    console.log('filtered', filtered)
     setSelection(prev => filtered)
   }, [selectedElements])
 

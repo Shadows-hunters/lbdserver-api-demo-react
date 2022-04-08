@@ -7,11 +7,10 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { project as p, datasets as d } from "../../../atoms"
 import { v4 } from "uuid"
 import DialogTemplate from './DialogTemplate';
-import { LBDserver } from "lbdserver-client-api"
+import { LbdProject, LbdService, LbdDataset } from "lbdserver-client-api"
 import { AGGREGATOR_ENDPOINT } from '../../../constants';
 import { extract, createReferences } from '../../../util/functions';
 import { DCAT, DCTERMS, LDP, RDFS } from '@inrupt/vocab-common-rdf'
-const { LbdProject, LbdService, LbdDataset } = LBDserver
 
 const Input = styled('input')({
     display: 'none',
@@ -35,7 +34,7 @@ export default function AlignDistributions(props: any) {
         for (const ds of activeDatasets) {
             // only one distribution per dataset at this point
             const mainDistribution = extract(ds.dataset.data, ds.dataset.url)[DCAT.distribution].map(d => d["@id"])[0]
-            const mime: string = extract(ds.dataset.data, mainDistribution)["http://purl.org/dc/terms/format"].map(d => d["@id"])[0]
+            const mime: string = extract(ds.dataset.data, mainDistribution)["http://www.w3.org/ns/dcat#mediaType"].map(d => d["@id"])[0]
             if (mime.includes("text/turtle") || mime.includes("gltf")) {
                 const url: string = extract(ds.dataset.data, mainDistribution)[DCAT.downloadURL].map(d => d["@id"])[0]
                 byMime[mime] = url

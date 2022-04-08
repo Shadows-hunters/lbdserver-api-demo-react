@@ -7,11 +7,10 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { project as p, datasets as d } from "../../../atoms"
 import { v4 } from "uuid"
 import DialogTemplate from './DialogTemplate';
-import { LBDserver } from "lbdserver-client-api"
+import { LbdDataset } from "lbdserver-client-api"
 import { AGGREGATOR_ENDPOINT } from '../../../constants';
 import { extract } from '../../../util/functions';
 import { DCTERMS, LDP, RDFS } from '@inrupt/vocab-common-rdf'
-const { LbdProject, LbdService, LbdDataset } = LBDserver
 
 const Input = styled('input')({
     display: 'none',

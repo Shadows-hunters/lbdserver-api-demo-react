@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Button, TextField, FormGroup, FormControlLabel, Checkbox, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useRecoilValue, useRecoilState } from "recoil";
@@ -7,7 +7,15 @@ import { newEngine } from '@comunica/actor-init-sparql'
 import { getDefaultSession } from '@inrupt/solid-client-authn-browser'
 import { parseStream } from '../../util/functions'
 import { translate } from "sparqlalgebrajs";
-import {LBDserver} from 'lbdserver-client-api'
+import {StoreContext} from '../../App'
+import {atom} from 'recoil'
+const q = atom({
+  key: 'query-module',
+  default: `PREFIX beo: <https://pi.pauwel.be/voc/buildingelement#>
+  SELECT * WHERE {
+          ?s a beo:Wall
+      } LIMIT 10`
+})
 
 
 function findLowerLevel(obj, variables) {
@@ -20,14 +28,13 @@ function findLowerLevel(obj, variables) {
 }
 
 const QueryModule = (props) => {
+  // const store = useContext(StoreContext)
+
   const datasets = useRecoilValue(d)
   const [endpoints, setEndpoints] = useState([])
   const [selectedElements, setSelectedElements] = useRecoilState(s)
 
-  const [query, setQuery] = useState(`PREFIX beo: <https://pi.pauwel.be/voc/buildingelement#>
-  SELECT * WHERE {
-          ?s a beo:Wall
-      } LIMIT 10`)
+  const [query, setQuery] = useRecoilState(q)
   const [queryResults, setQueryResults] = useState({})
   const [variables, setVariables] = useState([]);
   const [error, setError] = useState("")
@@ -63,7 +70,6 @@ const QueryModule = (props) => {
     }
   }, [query]);
 
-
   useEffect(() => {
     if (queryResults && queryResults.head) {
       const columnShape = queryResults.head.vars.map((v) => {return {
@@ -89,25 +95,24 @@ const QueryModule = (props) => {
   }, [queryResults])
 
   async function queryDistributions() {
-    const myEngine = newEngine()
-    const sources = endpoints.map(ds => ds.dataset.distributions[0].url)
-    const res = await myEngine.query(query, { sources, fetch: getDefaultSession().fetch })
-    const { data } = await myEngine.resultToString(
-      res,
-      "application/sparql-results+json"
-    );
-    const parsed = await parseStream(data);
-    setQueryResults(prev => parsed)
+    try {
+      console.log('querying')
+      const sources = endpoints.map(ds => ds.dataset.distributions[0].url)
+      const results = await project.directQuery(query, sources)
+      setQueryResults(prev => results)
+    } catch (error) {
+      console.log('error', error)
+    }
   }
 
   async function propagateAndSelect(selectionIds) {
-    const identifiersToFind = []
+    const identifiersToFind = new Set()
     const selectedResults = rows.filter(item => selectionIds.includes(item.id))
     variables.forEach(variable => {
       if (variable.checked) {
         selectedResults.forEach(res => {
           if (res[variable.name]) {
-            identifiersToFind.push(res[variable.name])
+            identifiersToFind.add(res[variable.name])
           }
         })
       }
@@ -116,9 +121,10 @@ const QueryModule = (props) => {
     for (const identifier of identifiersToFind) {
       for (const ds of endpoints) {
         const c = await project.getConceptByIdentifier(identifier, ds.dataset.url, ds.dataset.distributions[0].url)
-        selection.push(c)
+        if (c) selection.push(c)
       }
     }
+    console.log('selection', selection)
     setSelectedElements(prev => selection)
   }
 

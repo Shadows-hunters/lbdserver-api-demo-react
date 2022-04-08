@@ -22,8 +22,15 @@ import Header from "./components/header"
 import { v4 } from "uuid"
 import SdkDemo from './pages/Documentation';
 import DemoPage from './pages/DemoPage'
-
+import Enrichment from './pages/Enrichment'
 import creds from '../devCredentials'
+
+import {Store} from 'n3'
+
+
+export const StoreContext = React.createContext(new Store())
+
+
 
 function App() {
 
@@ -35,6 +42,7 @@ function App() {
     {label: "demo", path: "/", component: DemoPage, props: {}},
     // { label: "experimental", path: "/", component: Project, props: { initialLayout: config } },
     { label: "documentation", path: "/documentation", component: SdkDemo, props: {} },
+    { label: "enrichment", path: "/enrichment", component: Enrichment, props: {} },
     // { label: "project", path: "/project", component: Project, props: {} }
   ]
 
@@ -50,6 +58,7 @@ function App() {
 
   return (
     <div id={update}>
+      <StoreContext.Provider value={new Store()}>
         <Header pages={pages} />
         <Routes>
           {pages.map(page => {
@@ -59,6 +68,7 @@ function App() {
         </Routes>
       {/* <AuthComponent/>
       <Child/> */}
+      </StoreContext.Provider>
     </div>
   );
 }

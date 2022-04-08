@@ -1,1 +1,1 @@
-export const AGGREGATOR_ENDPOINT = "http://localhost:5000/test/lbd/"
+export const AGGREGATOR_ENDPOINT = "http://localhost:5000/office2/lbd/"

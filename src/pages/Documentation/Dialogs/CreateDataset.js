@@ -7,11 +7,10 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { project as p } from "../../../atoms"
 import { v4 } from "uuid"
 import DialogTemplate from './DialogTemplate';
-import { LBDserver } from "lbdserver-client-api"
+import { LbdProject, LbdService }  from "lbdserver-client-api"
 import { AGGREGATOR_ENDPOINT } from '../../../constants';
 import { extract } from '../../../util/functions';
 import { DCTERMS, LDP, RDFS } from '@inrupt/vocab-common-rdf'
-const { LbdProject, LbdService } = LBDserver
 
 const Input = styled('input')({
     display: 'none',
@@ -34,16 +33,31 @@ export default function CreateDataset(props) {
 
     async function createDataset() {
         try {
-            console.log('file', file)
             setLoading(true)
             const theDataset = await project.addDataset({ [RDFS.label]: label, [RDFS.comment]: comment }, eval(isPublic))
             if (file) {
-                const theDistribution = await theDataset.addDistribution(file, undefined, {}, undefined, eval(isPublic))
+                await theDataset.addDistribution(file, undefined, {}, undefined, eval(isPublic))
             }
+            setSuccess(true)
+            setFile(null)
+            setLoading(false)
+        } catch (error) {
+            setError(error)
+            setFile(null)
+            setLoading(false)
+        }
+    }
+
+    async function createEmptyDataset() {
+        try {
+            setLoading(true)
+            const theDataset = await project.addDataset({ [RDFS.label]: label, [RDFS.comment]: comment }, eval(isPublic))
+            await theDataset.addDistribution(Buffer.from(""), "text/turtle", {}, undefined, eval(isPublic))
             setSuccess(true)
             setLoading(false)
         } catch (error) {
             setError(error)
+            setFile(null)
             setLoading(false)
         }
 
@@ -100,7 +114,8 @@ export default function CreateDataset(props) {
                                 Choose File
                             </Button>
                         </label>
-                        <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={createDataset} disabled={loading}>Create Dataset</Button>
+                        <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={createDataset} disabled={loading || !file}>Create Dataset</Button>
+                        <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={createEmptyDataset} disabled={loading}>Create Empty Dataset</Button>
 
                         {error ? (
                             <Alert onClose={() => setError(null)} severity="error">{error.message}</Alert>

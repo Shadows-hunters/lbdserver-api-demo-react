@@ -6,11 +6,10 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { project as p } from "../../../atoms"
 import { v4 } from "uuid"
 import DialogTemplate from './DialogTemplate';
-import { LBDserver } from "lbdserver-client-api"
+import { LbdProject, LbdService } from "lbdserver-client-api"
 import { AGGREGATOR_ENDPOINT } from '../../../constants';
 import { extract } from '../../../util/functions';
 import { DCTERMS, LDP, RDFS } from '@inrupt/vocab-common-rdf'
-const { LbdProject, LbdService } = LBDserver
 
 export default function CreateProject(props) {
     const { open, title, description, Child, childProps } = props

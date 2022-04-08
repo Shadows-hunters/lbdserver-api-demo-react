@@ -1,7 +1,4 @@
 import { IQueryResultBindings, newEngine } from "@comunica/actor-init-sparql";
-import LbdDataset from "lbdserver-client-api/lib/types/helpers/LbdDataset";
-import LbdDistribution from "lbdserver-client-api/lib/types/helpers/LbdDistribution";
-import {translate, toSparql} from 'sparqlalgebrajs'
 
 function extract(jsonld, uri) {
     return Object.assign({}, ...jsonld.filter(i => i["@id"] === uri))
