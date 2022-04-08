@@ -1,0 +1,8 @@
+body {
+    overflow-y: scroll; /* Show scrollbars */
+  }
+
+.ScrollStyle{
+    max-height: 150px;
+    overflow-y: scroll;
+}
