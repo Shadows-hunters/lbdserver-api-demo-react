@@ -1,9 +1,9 @@
-import React, {Suspense, useRef} from "react";
-import "./ViewerLayout.css";
-import {Canvas, useFrame} from "@react-three/fiber";
-import {Html, OrbitControls, useGLTF} from "@react-three/drei";
-import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { Html, OrbitControls, useGLTF } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import React, { Suspense, useRef } from "react";
+import "./ViewerLayout.css";
 
 const Model = ({modelPath}) => {
   const gltf = useGLTF(modelPath, true)
