@@ -4,6 +4,8 @@ import { Canvas, useFrame } from "react-three-fiber";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+import Viewer from "../../../components/Viewer/3dviewer"
+
 export default function ViewerTab(props) {
   const { title, description } = props
   const [value, setValue] = React.useState(0);
@@ -16,14 +18,15 @@ export default function ViewerTab(props) {
     <Box sx={{ width: '100%' }}>
         <Typography component={"span"} variant="h5">{title}</Typography>
         <Typography component={"span"}>{description}</Typography>
-        <Canvas>
+        <Viewer></Viewer>
+        {/* <Canvas>
             <ambientLight intensity={0.1} />
             <directionalLight color="red" position={[0, 0, 5]} />
             <mesh>
                 <boxGeometry />
                 <meshStandardMaterial />
             </mesh>
-        </Canvas>
+        </Canvas> */}
     </Box>
   );
 }
