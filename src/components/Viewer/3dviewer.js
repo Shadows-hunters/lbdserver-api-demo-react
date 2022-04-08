@@ -2,6 +2,8 @@ import React, {Suspense, useRef} from "react";
 import "./ViewerLayout.css";
 import {Canvas, useFrame} from "@react-three/fiber";
 import {Html, OrbitControls, useGLTF} from "@react-three/drei";
+import Typography from "@mui/material/Typography";
+import { Stack } from "@mui/material";
 
 const Model = ({modelPath}) => {
   const gltf = useGLTF(modelPath, true)
@@ -36,12 +38,17 @@ const HTMLContent = ({domContent, children, modelPath, positionY}) => {
   )
 }
 
-export default function App() {
 
+
+export default function Viewer(props) {
+  const { title } = props;
   const domContent = useRef()
 
   return (
-    <div>
+    <Stack spacing={1} sx={{ width: "100%" }}>
+      <Typography component={"span"} variant="h5">
+        {title}
+      </Typography>
       <Canvas>
         <Suspense fallback={null}>
         <Lights/>
@@ -53,6 +60,6 @@ export default function App() {
         <OrbitControls/>
         </Suspense>
       </Canvas>
-    </div>
+    </Stack>
   );
 }

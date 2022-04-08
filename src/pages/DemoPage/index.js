@@ -7,7 +7,7 @@ import GetAllDatasets from '../Documentation/Dialogs/GetAllDatasets'
 import AlignDistributions from '../Documentation/Dialogs/AlignDistributions'
 import BasicTabs from '../Documentation/Dialogs/BasicTabs'
 import SliderTab from '../Documentation/Dialogs/SliderTab'
-import Viewer from './components/Viewer/3dviewer.js'
+import Viewer from '../../components/Viewer/3dviewer'
 
 const DemoPage = () => {
     return (
