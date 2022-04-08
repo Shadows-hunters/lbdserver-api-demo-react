@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
+import { sunPositions } from "../../../components/calculations/formulas";
 
 var SunCalc = require("suncalc");
 
@@ -133,23 +134,16 @@ export default function SliderTab(props) {
 
   // sun position
   const handleSubmit = () => {
-    let i = range[0];
-    var arr = [];
-    var day = dayjs(date);
-
-    while (i <= range[1]) {
-      const d = day.add(i * 60, "minute");
-      console.log(d);
-      let position = SunCalc.getPosition(d, latitude.value, longitude.value);
-      let vector = [
-        Math.sin(position.azimuth) * Math.cos(position.altitude),
-        Math.cos(position.azimuth) * Math.cos(position.altitude),
-        Math.sin(position.altitude),
-      ];
-      arr.push(vector);
-      i += interval;
-    }
-    setResult(JSON.stringify(arr));
+    setResult(
+      sunPositions(
+        date,
+        range[0],
+        range[1],
+        latitude.value,
+        longitude.value,
+        interval
+      )
+    );
   };
 
   return (
@@ -167,7 +161,7 @@ export default function SliderTab(props) {
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
-
+    
       <Typography>Time span</Typography>
       <MySlider
         valueLabelDisplay="auto"
