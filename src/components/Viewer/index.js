@@ -56,9 +56,12 @@ const LBDviewer = ({ parentNode }) => {
   async function onSelect(sel) {
     setSelectedElements(prev => [])
     for (const s of sel) {
+      console.log('s', s)
       const concept = await project.getConceptByIdentifier(s, dataset, model)
       console.log('concept', concept)
-      setSelectedElements(prev => [...prev, concept])
+      if (concept) {
+        setSelectedElements(prev => [...prev, concept])
+      }
     }
     setSelection(sel)
   }
