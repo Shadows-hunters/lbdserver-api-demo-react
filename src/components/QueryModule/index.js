@@ -11,10 +11,12 @@ import {StoreContext} from '../../App'
 import {atom} from 'recoil'
 const q = atom({
   key: 'query-module',
-  default: `PREFIX beo: <https://pi.pauwel.be/voc/buildingelement#>
+  default: `prefix beo: <https://pi.pauwel.be/voc/buildingelement#>
+prefix dot: <https://w3id.org/dot#>
+prefix bot: <https://w3id.org/bot#>
   SELECT * WHERE {
-          ?s a beo:Wall
-      } LIMIT 10`
+          ?s a beo:Wall; dot:hasDamage ?dam
+      }`
 })
 
 
