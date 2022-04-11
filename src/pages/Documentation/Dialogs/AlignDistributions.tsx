@@ -91,11 +91,16 @@ export default function AlignDistributions(props: any) {
         <Typography>{description}</Typography>
         {(project && getDefaultSession().info.isLoggedIn) ? (
             <div>
-                <Typography>Create abstract concepts for the selected datasets. Align glTF and RDF resources originating from the same IFC file. This can take a while.</Typography>
                 {(Object.keys(toAlign).length === 2) ? (
+                    <div>
+                    <Typography>Create abstract concepts for the selected datasets. Align glTF and RDF resources originating from the same IFC file. This can take a while.</Typography>
                 <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={align} disabled={loading}>Start Alignment of IFC and glTF</Button>
+                </div>
                 ) : (
-                    <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={createIdentifiers} disabled={loading}>Create (separate) concepts for selected datasets</Button>
+                    <div>
+                    <Typography>Create abstract concepts for the selected dataset</Typography>
+                    <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={createIdentifiers} disabled={loading}>Create concepts</Button>
+                    </div>
                 )}
                 {error ? (
                 <Alert onClose={() => setError(null)} severity="error">{error.message}</Alert>
