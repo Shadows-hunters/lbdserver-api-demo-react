@@ -30,12 +30,16 @@ const Enricher = () => {
   }, [])
 
   async function getAllDatasets() {
+    console.log('project', project)
     const allDatasets = await project.getAllDatasetUrls()
     const loaded = {}
     for (const ds of allDatasets) {
       const myDs = new LbdDataset(getDefaultSession(), ds)
-      await myDs.init()
-      loaded[ds] = { dataset: myDs, active: false }
+      console.log('myDs', myDs)
+      if (myDs.url.includes(project.localProject)) { // this is one of my datasets
+        await myDs.init()
+        loaded[ds] = { dataset: myDs, active: false }
+      }
     }
     setDatasets(loaded)
   }
@@ -65,11 +69,11 @@ const Enricher = () => {
             damagedItemAlias = reference.identifier
             console.log("exists!")
             existing = true
-          } else {
-            // if there is not yet a reference for this concept in the selected distribution/dataset
-            damagedItemAlias = mainDataset.url + "#" + v4()
-            console.log("doesn't exist yet")
           }
+        }
+
+        if (!damagedItemAlias) {
+            damagedItemAlias = mainDataset.url + "#" + v4()
         }
 
         const damageAlias = mainDataset.url + "#damage_" + v4()
@@ -84,8 +88,13 @@ const Enricher = () => {
         if (!existing) {
           const c = new LbdConcept(getDefaultSession(), project.getReferenceRegistry())
 
+          const newRef = {
+            dataset: mainDataset.url,
+            distribution: dist.url,
+            identifier: damagedItemAlias
+          }
           // JSON.parse(JSON.stringify()) because recoil doesn't allow to store object instances
-          c.init(JSON.parse(JSON.stringify({ aliases: element.aliases, references: element.references })))
+          c.init(JSON.parse(JSON.stringify({ aliases: element.aliases, references: [...element.references, newRef] })))
 
           // add a new reference
           await c.addReference(damagedItemAlias, mainDataset.url, dist.url)
