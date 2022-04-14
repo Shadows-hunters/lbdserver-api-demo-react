@@ -6,9 +6,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { sunPositions } from "../../../components/calculations/formulas";
-
-var SunCalc = require("suncalc");
+import { sunPositions } from "./calculations/formulas";
 
 var dayjs = require("dayjs");
 //import dayjs from 'dayjs' // ES 2015
@@ -124,6 +122,8 @@ export default function SliderTab(props) {
   const [range, setRange] = useState([7, 17]);
   const [interval, setInterval] = useState(1);
   const [result, setResult] = useState("resultaat");
+  const [latitude, setLatitude] = useState("50.850346");
+  const [longitude, setLongitude] = useState("4.351721");
 
   const updateRange = (e, data) => {
     setRange(data);
@@ -131,18 +131,18 @@ export default function SliderTab(props) {
   const updateInterval = (e, data) => {
     setInterval(data);
   };
+  const updateLatitude = (e) => {
+    setLatitude(e.target.value);
+  };
+  const updateLongitude = (e) => {
+    setLongitude(e.target.value);
+  };
 
   // sun position
   const handleSubmit = () => {
+    console.log(latitude, longitude);
     setResult(
-      sunPositions(
-        date,
-        range[0],
-        range[1],
-        latitude.value,
-        longitude.value,
-        interval
-      )
+      sunPositions(date, range[0], range[1], latitude, longitude, interval)
     );
   };
 
@@ -161,7 +161,7 @@ export default function SliderTab(props) {
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
-    
+
       <Typography>Time span</Typography>
       <MySlider
         valueLabelDisplay="auto"
@@ -176,8 +176,8 @@ export default function SliderTab(props) {
       <Separator />
       <Typography>Location</Typography>
       <Box sx={{ "& .MuiTextField-root": { m: 1 } }}>
-        <TextField label="Latitude" id="latitude" defaultValue={"50.850346"} />
-        <TextField label="Longitude" id="longitude" defaultValue={"4.351721"} />
+        <TextField value={latitude} onChange={updateLatitude} />
+        <TextField value={longitude} onChange={updateLongitude} />
       </Box>
       <Typography>Shadows interval</Typography>
       <MySlider
