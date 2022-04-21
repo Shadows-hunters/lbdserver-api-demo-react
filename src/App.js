@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import "./App.css";
+import MapTab from "./components/map/MapTab";
 import SliderTab from "./components/SliderTab";
 import Viewer from "./components/Viewer/3dviewer";
 
@@ -14,10 +15,13 @@ function App() {
       <Grid item xs={0} sm={2} md={3} />
       <Grid item style={{ margin: 15 }} xs={4} sm={4} md={6}>
         <div style={subComponentStyle}>
-          <SliderTab title={"8. Our sliders."} />
+          <SliderTab title={"1. Our sliders."} />
         </div>
         <div style={subComponentStyle}>
-          <Viewer title={"7. Our viewer."} />
+          <MapTab title={"2. Our map chooser."} />
+        </div>
+        <div style={subComponentStyle}>
+          <Viewer title={"3. Our viewer."} />
         </div>
       </Grid>
       <Grid item xs={0} sm={2} md={3} />
