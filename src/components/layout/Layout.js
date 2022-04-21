@@ -83,6 +83,7 @@ const Drawer = styled(MuiDrawer, {
 export default function Layout(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [result, setResult] = React.useState();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -90,6 +91,10 @@ export default function Layout(props) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleResult = (data) => {
+    setResult(data);
   };
 
   return (
@@ -125,12 +130,12 @@ export default function Layout(props) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <SliderTab MyOpen={handleDrawerOpen} result={result}/>
+        <SliderTab MyOpen={handleDrawerOpen} result={handleResult} />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {props.children}
-        lol
+        <p>{result}</p>
       </Box>
     </Box>
   );
