@@ -9,7 +9,6 @@ function extract(jsonld, uri) {
     const gltfData = await session.fetch(gltfLocation).then(t => t.json())
     const lbdProps = await determineLBDpropsLevel(lbdLocation, session);
     for (const element of gltfData.nodes) {
-      if (element.name && element.name.length > 10) {
         let q;
         if (lbdProps === 1) {
           q = `
@@ -48,8 +47,10 @@ function extract(jsonld, uri) {
             const concept = await project.addConcept()
             await concept.addReference(element.name, gltfDataset, gltfLocation)
             await concept.addReference(el, lbdDataset, lbdLocation)
+          } else {
+            console.log('could not create reference for element with ID: ', element.name)
           }
-      }
+      
     } 
   
   

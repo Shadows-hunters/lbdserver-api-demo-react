@@ -9,6 +9,7 @@ import { getDefaultSession, login, Session } from '@inrupt/solid-client-authn-br
 import { extract } from "../../util/functions";
 import { DCTERMS, LDP, RDFS } from '@inrupt/vocab-common-rdf'
 import { v4 } from "uuid"
+
 const index = () => {
   return (
     <div id="enrichmentViewer">
@@ -61,10 +62,8 @@ const Enricher = () => {
         let damagedItemAlias
         let existing = false
 
-        console.log('dist', dist)
         // if there is already a reference for this concept in the selected distribution/dataset
         for (const reference of element.references) {
-          console.log('reference', reference)
           if (reference.distribution === dist.url) {
             damagedItemAlias = reference.identifier
             console.log("exists!")

@@ -2,9 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { Button, TextField, FormGroup, FormControlLabel, Checkbox, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useRecoilValue, useRecoilState } from "recoil";
-import { datasets as d, project as p, selectedElements as s } from '../../atoms'
+import { datasets as d, project as p, selectedElements as s} from '../../../atoms'
 import { translate } from "sparqlalgebrajs";
 import {atom} from 'recoil'
+import {QueryEngine} from '@comunica/query-sparql'
 
 const defaultQuery = `prefix beo: <https://pi.pauwel.be/voc/buildingelement#>
 prefix dot: <https://w3id.org/dot#>
@@ -18,7 +19,6 @@ const q = atom({
   key: 'query-module',
   default: defaultQuery
 })
-
 
 function findLowerLevel(obj, variables) {
   if (!variables) variables = obj.variables
@@ -35,7 +35,7 @@ const QueryModule = (props) => {
   const datasets = useRecoilValue(d)
   const [endpoints, setEndpoints] = useState([])
   const [selectedElements, setSelectedElements] = useRecoilState(s)
-
+  const [queryEngine, setQueryEngine] = useState(new QueryEngine())
   const [query, setQuery] = useRecoilState(q)
   const [queryResults, setQueryResults] = useState({})
   const [variables, setVariables] = useState([]);
@@ -47,7 +47,6 @@ const QueryModule = (props) => {
 
   useEffect(() => {
     const activeDatasets = Object.keys(datasets).map((i) => datasets[i]).filter((ds) => ds.active)
-    console.log('activeDatasets', activeDatasets)
     const filtered = activeDatasets.filter(ds => {
       const main = ds.dataset.distributions[0]
       return ["https://www.iana.org/assignments/media-types/text/turtle"].includes(main.getContentType())
@@ -68,7 +67,6 @@ const QueryModule = (props) => {
       })
       setVariables(v => recognised);
     } catch (error) {
-      console.log('error', error)
       setError(error.message);
     }
   }, [query]);
@@ -101,14 +99,13 @@ const QueryModule = (props) => {
     try {
       console.log('querying')
       const sources = endpoints.map(ds => ds.dataset.distributions[0].url)
-      console.log('sources', sources)
-      const results = await project.directQuery(query, sources)
+      const results = await project.directQuery(query, sources, {queryEngine})
       setQueryResults(prev => results)
     } catch (error) {
       console.log('error', error)
     }
-  }
-
+  } 
+ 
   async function propagateAndSelect(selectionIds) {
     const identifiersToFind = new Set()
     const selectedResults = rows.filter(item => selectionIds.includes(item.id))
@@ -124,14 +121,13 @@ const QueryModule = (props) => {
     const selection = []
     for (const identifier of identifiersToFind) {
       for (const ds of endpoints) {
-        const c = await project.getConceptByIdentifier(identifier, ds.dataset.url, ds.dataset.distributions[0].url)
+        const c = await project.getConceptByIdentifier(identifier, ds.dataset.url, ds.dataset.distributions[0].url, {queryEngine})
         if (c) selection.push(c)
       }
     }
-    console.log('selection', selection)
-    setSelectedElements(prev => selection)
+    setSelectedElements(prev => selection) 
   }
-
+  
   return (
     <div style={{ margin: 20 }}>
       <h4 style={{ marginTop: -5 }}>Query Resource Metadata</h4>

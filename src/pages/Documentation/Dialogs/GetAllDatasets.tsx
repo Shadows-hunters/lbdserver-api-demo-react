@@ -26,16 +26,42 @@ export default function GetAllDatasets(props: any) {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     const [datasets, setDatasets] = useRecoilState(d)
+    const [allSelected, setAllSelected] = useState(false)
 
     async function getAllDatasets() {
-        const allDatasets = await project.getAllDatasetUrls()
-        const loaded = {}
-        for (const ds of allDatasets) {
-            const myDs = new LbdDataset(getDefaultSession(), ds)
-            await myDs.init()
-            loaded[ds] = { dataset: myDs, active: false }
+        try {
+            setLoading(true)
+            const allDatasets = await project.getAllDatasetUrls()
+            const loaded = {}
+            for (const ds of allDatasets) {
+                const myDs = new LbdDataset(getDefaultSession(), ds)
+                await myDs.init()
+                loaded[ds] = { dataset: myDs, active: false }
+            }
+            setDatasets(loaded)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            setError(error)
         }
-        setDatasets(loaded)
+
+    }
+
+    async function selectAllDatasets() {
+        const newSelection = {}
+        let active
+        if (allSelected) {
+            active = false
+            setAllSelected(false)
+        } else {
+            active = true
+            setAllSelected(true)
+        }
+
+        Object.keys(datasets).forEach(url => {
+            newSelection[url] = { ...datasets[url], active }
+        })
+        setDatasets(newSelection)
     }
 
     return <div>
@@ -43,10 +69,12 @@ export default function GetAllDatasets(props: any) {
         <Typography>{description}</Typography>
         {project ? (
             <div>
-                <Button style={{ margin: 10, width: "200" }} variant="contained" onClick={getAllDatasets}>Get Datasets</Button>
+                <Button style={{ margin: 10, width: "200" }} disabled={loading} variant="contained" onClick={getAllDatasets}>Get Datasets</Button>
+                <FormControlLabel onChange={selectAllDatasets} control={<Checkbox checked={allSelected} />} label="Select all" />
+
                 <FormGroup>
                     {Object.keys(datasets).map(ds => {
-                        return <DatasetInfo key={ds} dataset={datasets[ds]}/>
+                        return <DatasetInfo key={ds} dataset={datasets[ds]} />
                     })}
                 </FormGroup>
             </div>
@@ -57,10 +85,10 @@ export default function GetAllDatasets(props: any) {
 };
 
 
-function DatasetInfo(props: {dataset: {dataset: InstanceType<typeof LbdDataset>, active: boolean}}) {
+function DatasetInfo(props: { dataset: { dataset: InstanceType<typeof LbdDataset>, active: boolean } }) {
     const [datasets, setDatasets] = useRecoilState(d)
 
-    const {dataset, active} = props.dataset
+    const { dataset, active } = props.dataset
 
     function makeLabel() {
         const label = extract(dataset.data, dataset.url)[RDFS.label][0]["@value"]
@@ -69,7 +97,7 @@ function DatasetInfo(props: {dataset: {dataset: InstanceType<typeof LbdDataset>,
     }
 
     function toggleDatasetState() {
-        setDatasets({...datasets, [dataset.url]: {dataset, active: !active}})
+        setDatasets({ ...datasets, [dataset.url]: { dataset, active: !active } })
     }
     return <FormControlLabel onChange={toggleDatasetState} control={<Checkbox checked={active} />} label={makeLabel()} />
 }

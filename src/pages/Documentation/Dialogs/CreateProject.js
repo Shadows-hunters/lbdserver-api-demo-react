@@ -28,7 +28,6 @@ export default function CreateProject(props) {
             const myService = new LbdService(getDefaultSession())
             let aggregator = await myService.getProjectRegistry(getDefaultSession().info.webId)
             if (!aggregator) aggregator = await myService.createProjectRegistry()
-            console.log('aggregator', aggregator)
             const accessPoint = aggregator + id
             const myProject = new LbdProject(getDefaultSession(), accessPoint)
             await myProject.create([], {[RDFS.label]: name}, true)

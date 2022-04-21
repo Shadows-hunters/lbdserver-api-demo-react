@@ -1,6 +1,7 @@
 import { Session } from "@inrupt/solid-client-authn-browser"
 import {atom} from "recoil"
 import {v4} from 'uuid'
+import QueryEngine from '@comunica/query-sparql'
 
 const sessionTrigger = atom({
     key: 'sessionTrigger',

@@ -23,6 +23,7 @@ import { v4 } from "uuid"
 import SdkDemo from './pages/Documentation';
 import DemoPage from './pages/DemoPage'
 import Enrichment from './pages/Enrichment'
+import Exploded from './pages/Exploded'
 import creds from '../devCredentials'
 
 import {Store} from 'n3'
@@ -43,6 +44,7 @@ function App() {
     // { label: "experimental", path: "/", component: Project, props: { initialLayout: config } },
     { label: "documentation", path: "/documentation", component: SdkDemo, props: {} },
     { label: "enrichment", path: "/enrichment", component: Enrichment, props: {} },
+    { label: "experiment", path: "/experiment", component: Exploded, props: {} },
     // { label: "project", path: "/project", component: Project, props: {} }
   ]
 
