@@ -13,9 +13,9 @@ function App() {
     >
       <Grid item xs={0} sm={2} md={3} />
       <Grid item style={{ margin: 15 }} xs={4} sm={4} md={6}>
-        <div style={subComponentStyle}>
+        {/* <div style={subComponentStyle}>
           <SliderTab title={"8. Our sliders."} />
-        </div>
+        </div> */}
         <div style={subComponentStyle}>
           <Viewer title={"7. Our viewer."} />
         </div>
