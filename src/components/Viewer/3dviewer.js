@@ -7,7 +7,13 @@ import "./ViewerLayout.css";
 import { sunPositions } from "../calculations/formulas";
 
 const Model = ({modelPath}) => {
-  const gltf = useGLTF(modelPath, true)
+  const gltf = useGLTF(modelPath, true);
+  gltf.scene.traverse(function(node){
+    if (node.isMesh) {
+      node.castShadow = true;
+      node.receiveShadow = true;
+    }
+  });
   return <primitive object={gltf.scene} dispose={null}/>
 }
 
@@ -79,7 +85,7 @@ const Lights = () => {
     {/* {lichten} */}
     <directionalLight
       intensity={0.5}
-      position={[10,10,5]}
+      position={[100,100,50]}
       castShadow
       shadow-mapSize-height={512}
       shadow-mapSize-width={512}
@@ -96,7 +102,7 @@ const HTMLContent = ({domContent, children, modelPath, positionY}) => {
   return(
       <group position={[0,positionY,0]}>
         <mesh ref={ref} position={[0,-35,0]}>
-          <Model modelPath={modelPath}/>
+          <Model modelPath={modelPath} castShadow receiveShaodw/>
         </mesh>
         <Html portal={domContent} fullscreen>
           <div className="container"> {children} </div>
@@ -116,13 +122,13 @@ export default function Viewer(props) {
       <Typography component={"span"} variant="h5">
         {title}
       </Typography>
-      <Canvas colorManagement shadowMap>
+      <Canvas colorManagement shadows>
         <Lights/>
-        {/* <Model castShadow receiveShadow modelPath={"https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf"}/> */}
+        <Model castShadow receiveShadow modelPath={"https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf"}/>
         <OrbitControls/>
-        <Box castShadow receiveShadow position={[0, 0.2, 0]}>
+        {/* <Box castShadow receiveShadow position={[0, 0.2, 0]}>
          <meshStandardMaterial attach="material" color="gray" />
-        </Box>
+        </Box> */}
         <Plane
           receiveShadow
           rotation={[-Math.PI/2, 0, 0]}
