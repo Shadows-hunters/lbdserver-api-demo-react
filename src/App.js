@@ -10,11 +10,4 @@ function App() {
   );
 }
 
-const subComponentStyle = {
-  marginTop: 30,
-  border: "2px solid gray",
-  borderRadius: 15,
-  padding: 15,
-};
-
 export default App;

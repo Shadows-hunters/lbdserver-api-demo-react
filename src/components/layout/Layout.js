@@ -1,6 +1,7 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
+import { List, ListItem } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import SliderTab from "../SliderTab";
 
-const drawerWidth = 400;
+const drawerWidth = 300;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -32,7 +33,7 @@ const closedMixin = (theme) => ({
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(${theme.spacing(7)} + 1px)`,
   },
 });
 
@@ -130,7 +131,10 @@ export default function Layout(props) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <SliderTab MyOpen={handleDrawerOpen} result={handleResult} />
+        <ListItem sx={{p:"0"}}>
+          <SliderTab MyOpen={handleDrawerOpen} result={handleResult} />
+        </ListItem>
+        
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />

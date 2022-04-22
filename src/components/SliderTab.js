@@ -7,14 +7,10 @@ import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
   Box,
-  Button,
-  ListItemButton,
-  ListItemIcon,
-  Slider,
+  Button, Slider,
   SliderThumb,
   Stack,
-  TextField,
-  Typography,
+  TextField
 } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
@@ -124,8 +120,6 @@ function SpanComponent(props) {
 }
 
 export default function SliderTab(props) {
-  const { title } = props;
-
   const [date, setDate] = useState("2022-03-17");
   const [range, setRange] = useState([7, 17]);
   const [interval, setInterval] = useState(1);
@@ -192,9 +186,9 @@ export default function SliderTab(props) {
         title="Location"
         icon={<MapIcon />}
         body={
-          <Box sx={{ "& .MuiTextField-root": { m: 1 } }}>
-            <TextField value={latitude} onChange={updateLatitude} />
-            <TextField value={longitude} onChange={updateLongitude} />
+          <Box sx={{ "& .MuiTextField-root": { m: 1 }, width:"130px"}}>
+            <TextField label="Latitude" value={latitude} onChange={updateLatitude} />
+            <TextField label="Longitude" value={longitude} onChange={updateLongitude} />
           </Box>
         }
       />
@@ -214,7 +208,7 @@ export default function SliderTab(props) {
           />
         }
       />
-      <Stack sx={{ width: "100px", ml: "70px" }}>
+      <Stack sx={{ width: "100px", ml: "70px", mt:"20px" }}>
         <Button onClick={handleSubmit} variant="outlined" color="success">
           Submit
         </Button>
