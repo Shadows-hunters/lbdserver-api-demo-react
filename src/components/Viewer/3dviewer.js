@@ -34,6 +34,10 @@ const Lights = () => {
         castShadow
         shadow-mapSize-height={5000}
         shadow-mapSize-width={5000}
+        shadow-camera-left={-20}
+        shadow-camera-right={20}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
       />
     </>
   );
@@ -69,7 +73,7 @@ export default function Viewer(props) {
           receiveShadow
           rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -1, 0]}
-          args={[1000, 1000]}
+          args={[100, 100]}
         >
           <meshStandardMaterial attach="material" color="white" />
         </Plane>
