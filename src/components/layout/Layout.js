@@ -1,7 +1,7 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
-import { List, ListItem } from "@mui/material";
+import { ListItem } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,6 +13,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import SliderTab from "../SliderTab";
+import Viewer from "../Viewer/3dviewer";
 
 const drawerWidth = 300;
 
@@ -131,14 +132,13 @@ export default function Layout(props) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <ListItem sx={{p:"0"}}>
+        <ListItem sx={{ p: "0" }}>
           <SliderTab MyOpen={handleDrawerOpen} result={handleResult} />
         </ListItem>
-        
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {props.children}
+        <Viewer />
         <p>{result}</p>
       </Box>
     </Box>

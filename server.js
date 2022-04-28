@@ -1,6 +1,7 @@
 const formulas = require("./src/components/calculations/formulas");
 
-const cors = require('cors');
+var fs = require("fs");
+const cors = require("cors");
 const express = require("express");
 const app = express();
 app.use(cors());
@@ -52,7 +53,16 @@ app.post("/map", (req, res) => {
     res.status(418).send({ message: "longitude needed!" });
   }
 
+  var currentSearchResult = { city: city, latitude: latitude, longitude: longitude };
+
+  fs.readFile("public\map_data\Cleaned BE.json", function (err, data) {
+    var json = JSON.parse(data);
+    json.push("search result: " + currentSearchResult);
+
+    fs.writeFile("public\map_data\Cleaned BE.json", JSON.stringify(json));
+  });
+
   res
     .status(200)
-    .send({ city: city, latitude: latitude, longitude: longitude });
+    .send("done");
 });
