@@ -1,12 +1,23 @@
+import AvTimerIcon from "@mui/icons-material/AvTimer";
+import EventIcon from "@mui/icons-material/Event";
+import GrainIcon from "@mui/icons-material/Grain";
+import MapIcon from "@mui/icons-material/Map";
 import DateAdapter from "@mui/lab/AdapterDayjs";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { Button, Slider, SliderThumb, Stack, TextField } from "@mui/material";
-import Box from "@mui/material/Box";
+import {
+  Box,
+  Button,
+  Slider,
+  SliderThumb,
+  Stack,
+  TextField,
+} from "@mui/material";
+import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { sunPositions } from "./calculations/formulas";
+import DrawerItem from "./layout/DrawerItem";
 
 var dayjs = require("dayjs");
 //import dayjs from 'dayjs' // ES 2015
@@ -97,12 +108,6 @@ const marks2 = [
   },
 ];
 
-const Separator = styled("div")(
-  ({ theme }) => `
-  height: ${theme.spacing(1)};
-`
-);
-
 function SpanComponent(props) {
   const { children, ...other } = props;
   return (
@@ -116,8 +121,6 @@ function SpanComponent(props) {
 }
 
 export default function SliderTab(props) {
-  const { title } = props;
-
   const [date, setDate] = useState("2022-03-17");
   const [range, setRange] = useState([7, 17]);
   const [interval, setInterval] = useState(1);
@@ -140,63 +143,112 @@ export default function SliderTab(props) {
 
   // sun position
   const handleSubmit = () => {
-    console.log(latitude, longitude);
+    // -----------
+    // to use api for calculations
+    // -----------
+
+    // var myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/json");
+
+    // var raw = JSON.stringify({
+    //   date: date,
+    //   start: range[0],
+    //   end: range[1],
+    //   longitude: longitude,
+    //   latitude: latitude,
+    //   interval: interval,
+    // });
+
+    // var requestOptions = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: raw,
+    //   redirect: "follow",
+    // };
+
+    // fetch("http://localhost:8080/positions", requestOptions)
+    //   .then((response) => response.text())
+    //   .then((result) => setResult(result))
+    //   .catch((error) => console.log("error", error));
+
     setResult(
       sunPositions(date, range[0], range[1], latitude, longitude, interval)
     );
+    props.result(result);
   };
 
   return (
-    <Stack spacing={1} sx={{ width: "100%" }}>
-      <Typography component={"span"} variant="h5">
-        {title}
-      </Typography>
-      <Typography>Date</Typography>
-      <LocalizationProvider dateAdapter={DateAdapter}>
-        <DatePicker
-          value={date}
-          onChange={(newDate) => {
-            setDate(newDate);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-
-      <Typography>Time span</Typography>
-      <MySlider
-        valueLabelDisplay="auto"
-        value={range}
-        onChange={updateRange}
-        components={{ Thumb: SpanComponent }}
-        step={1}
-        marks={marks1}
-        min={5}
-        max={24}
+    <List onClick={props.MyOpen}>
+      <DrawerItem
+        title="Date"
+        icon={<EventIcon />}
+        body={
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <DatePicker
+              value={date}
+              onChange={(newDate) => {
+                setDate(newDate);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        }
       />
-      <Separator />
-      <Typography>Location</Typography>
-      <Box sx={{ "& .MuiTextField-root": { m: 1 } }}>
-        <TextField value={latitude} onChange={updateLatitude} />
-        <TextField value={longitude} onChange={updateLongitude} />
-      </Box>
-      <Typography>Shadows interval</Typography>
-      <MySlider
-        valueLabelDisplay="auto"
-        value={interval}
-        onChange={updateInterval}
-        components={{ Thumb: SpanComponent }}
-        step={0.25}
-        marks={marks2}
-        min={0.25}
-        max={4}
+      <DrawerItem
+        title="Time span"
+        icon={<AvTimerIcon />}
+        body={
+          <MySlider
+            valueLabelDisplay="auto"
+            value={range}
+            onChange={updateRange}
+            components={{ Thumb: SpanComponent }}
+            step={1}
+            marks={marks1}
+            min={5}
+            max={24}
+          />
+        }
       />
-      <Separator />
-      <Button onClick={handleSubmit} variant="outlined" color="success">
-        Submit
-      </Button>
-      <Typography variant="caption" fontSize={10}>
-        {result}
-      </Typography>
-    </Stack>
+      <DrawerItem
+        title="Location"
+        icon={<MapIcon />}
+        body={
+          <Box sx={{ "& .MuiTextField-root": { m: 1 }, width: "130px" }}>
+            <TextField
+              label="Latitude"
+              value={latitude}
+              onChange={updateLatitude}
+            />
+            <TextField
+              label="Longitude"
+              value={longitude}
+              onChange={updateLongitude}
+            />
+          </Box>
+        }
+      />
+      <DrawerItem
+        title="Shadow interval"
+        icon={<GrainIcon />}
+        body={
+          <MySlider
+            valueLabelDisplay="auto"
+            value={interval}
+            onChange={updateInterval}
+            components={{ Thumb: SpanComponent }}
+            step={0.25}
+            marks={marks2}
+            min={0.25}
+            max={4}
+          />
+        }
+      />
+      <Stack sx={{ width: "100px", ml: "70px", mt: "20px" }}>
+        <Button onClick={handleSubmit} variant="outlined" color="success">
+          Submit
+        </Button>
+      </Stack>
+    </List>
   );
 }
