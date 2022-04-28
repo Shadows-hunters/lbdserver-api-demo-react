@@ -15,9 +15,12 @@ import {
 } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
+import { fontSize } from "@mui/system";
 import React, { useState } from "react";
 import { sunPositions } from "./calculations/formulas";
 import DrawerItem from "./layout/DrawerItem";
+import Popup from "./map/Popup.js";
+import MapTab from "./map/MapTab.js";
 
 var dayjs = require("dayjs");
 //import dayjs from 'dayjs' // ES 2015
@@ -189,6 +192,12 @@ export default function SliderTab(props) {
     props.result(result);
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <List onClick={props.MyOpen}>
       <DrawerItem
@@ -227,19 +236,31 @@ export default function SliderTab(props) {
         icon={<MapIcon />}
         body={
           <Box sx={{ "& .MuiTextField-root": { m: 1 }, width: "130px" }}>
-            <TextField
-              label="Latitude"
-              value={latitude}
-              onChange={updateLatitude}
-            />
-            <TextField
-              label="Longitude"
-              value={longitude}
-              onChange={updateLongitude}
-            />
+            <Stack>
+              <div>
+                <TextField
+                  label="Latitude"
+                  value={latitude}
+                  onChange={updateLatitude}
+                />
+                <TextField
+                  label="Longitude"
+                  value={longitude}
+                  onChange={updateLongitude}
+                />
+              </div>
+              <Button
+                onClick={togglePopup}
+                variant="outlined"
+                sx={{ width: "200px", fontSize: "10px" }}
+              >
+                Don't know the exact location?
+              </Button>
+            </Stack>
           </Box>
         }
       />
+
       <DrawerItem
         title="Shadow interval"
         icon={<GrainIcon />}
@@ -261,6 +282,19 @@ export default function SliderTab(props) {
           Submit
         </Button>
       </Stack>
+      {isOpen && (
+        <Popup
+          content={
+            <>
+              <div>
+                <MapTab />
+              </div>
+              <button>Test button</button>
+            </>
+          }
+          handleClose={togglePopup}
+        />
+      )}
     </List>
   );
 }
