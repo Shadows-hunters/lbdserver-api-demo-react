@@ -4,7 +4,6 @@ import { Html, OrbitControls, Plane, useGLTF, Box } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { Suspense, useRef } from "react";
 import "./ViewerLayout.css";
-import { sunPositions } from "../calculations/formulas";
 
 const Model = ({modelPath}) => {
   const gltf = useGLTF(modelPath, true);
@@ -77,19 +76,21 @@ const positionsList = [
 
 const Lights = () => {
   const lichten = positionsList.map((light) =>
-  <directionalLight position={light} intensity={1} castShadow/>
+  <directionalLight
+  position={light}
+  intensity={0.1}
+  castShadow
+  shadow-mapSize-height={512}
+  shadow-mapSize-width={512}
+  shadow-camera-left={-20}
+  shadow-camera-right={20}
+  shadow-camera-top={20}
+  shadow-camera-bottom={-20}/>
   )
   return(
     <>
     <ambientLight intensity={0.1}/>
-    {/* {lichten} */}
-    <directionalLight
-      intensity={0.5}
-      position={[100,100,50]}
-      castShadow
-      shadow-mapSize-height={512}
-      shadow-mapSize-width={512}
-      />
+    {lichten}
     </>
   )
 }
@@ -126,9 +127,6 @@ export default function Viewer(props) {
         <Lights/>
         <Model castShadow receiveShadow modelPath={"https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf"}/>
         <OrbitControls/>
-        {/* <Box castShadow receiveShadow position={[0, 0.2, 0]}>
-         <meshStandardMaterial attach="material" color="gray" />
-        </Box> */}
         <Plane
           receiveShadow
           rotation={[-Math.PI/2, 0, 0]}
