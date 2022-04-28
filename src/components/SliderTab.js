@@ -7,10 +7,11 @@ import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
   Box,
-  Button, Slider,
+  Button,
+  Slider,
   SliderThumb,
   Stack,
-  TextField
+  TextField,
 } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
@@ -142,7 +143,34 @@ export default function SliderTab(props) {
 
   // sun position
   const handleSubmit = () => {
-    console.log(latitude, longitude);
+    // -----------
+    // to use api for calculations
+    // -----------
+
+    // var myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/json");
+
+    // var raw = JSON.stringify({
+    //   date: date,
+    //   start: range[0],
+    //   end: range[1],
+    //   longitude: longitude,
+    //   latitude: latitude,
+    //   interval: interval,
+    // });
+
+    // var requestOptions = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: raw,
+    //   redirect: "follow",
+    // };
+
+    // fetch("http://localhost:8080/positions", requestOptions)
+    //   .then((response) => response.text())
+    //   .then((result) => setResult(result))
+    //   .catch((error) => console.log("error", error));
+
     setResult(
       sunPositions(date, range[0], range[1], latitude, longitude, interval)
     );
@@ -186,9 +214,17 @@ export default function SliderTab(props) {
         title="Location"
         icon={<MapIcon />}
         body={
-          <Box sx={{ "& .MuiTextField-root": { m: 1 }, width:"130px"}}>
-            <TextField label="Latitude" value={latitude} onChange={updateLatitude} />
-            <TextField label="Longitude" value={longitude} onChange={updateLongitude} />
+          <Box sx={{ "& .MuiTextField-root": { m: 1 }, width: "130px" }}>
+            <TextField
+              label="Latitude"
+              value={latitude}
+              onChange={updateLatitude}
+            />
+            <TextField
+              label="Longitude"
+              value={longitude}
+              onChange={updateLongitude}
+            />
           </Box>
         }
       />
@@ -208,7 +244,7 @@ export default function SliderTab(props) {
           />
         }
       />
-      <Stack sx={{ width: "100px", ml: "70px", mt:"20px" }}>
+      <Stack sx={{ width: "100px", ml: "70px", mt: "20px" }}>
         <Button onClick={handleSubmit} variant="outlined" color="success">
           Submit
         </Button>
