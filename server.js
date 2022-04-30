@@ -53,16 +53,18 @@ app.post("/map", (req, res) => {
     res.status(418).send({ message: "longitude needed!" });
   }
 
-  var currentSearchResult = { city: city, latitude: latitude, longitude: longitude };
+//   let newData = { [city]: };
 
-  fs.readFile("public\map_data\Cleaned BE.json", function (err, data) {
-    var json = JSON.parse(data);
-    json.push("search result: " + currentSearchResult);
+  var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
+  var myObject = JSON.parse(data);
+  myObject[city] =  [latitude, longitude]
+//   myObject.push(newData);
 
-    fs.writeFile("public\map_data\Cleaned BE.json", JSON.stringify(json));
-  });
-
-  res
-    .status(200)
-    .send("done");
+  fs.writeFile(
+    "public/map_data/Cleaned BE arr.json",
+    JSON.stringify(myObject),
+    (err) => {
+      res.status(200).send("done");
+    }
+  );
 });
