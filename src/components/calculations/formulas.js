@@ -21,7 +21,7 @@ function sunPositions(date, start, end, latitude, longitude, interval ) {
         i += interval;
     }
 
-    return JSON.stringify(arr);
+    return arr;
 }
 
 module.exports = { sunPositions };
