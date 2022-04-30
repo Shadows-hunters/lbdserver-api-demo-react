@@ -5,7 +5,6 @@ import { ListItem } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
@@ -127,7 +126,6 @@ export default function Layout(props) {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
         <ListItem sx={{ p: "0" }}>
           <SliderTab />
         </ListItem>

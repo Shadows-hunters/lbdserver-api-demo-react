@@ -9,7 +9,7 @@ import { Box, Slider, SliderThumb, TextField } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   atomDate,
   atomInterval,
@@ -17,6 +17,7 @@ import {
   atomLongitude,
   atomRange
 } from "../recoil/parameters";
+import atomSidebar from "../recoil/sidebar/atomSidebar";
 import DrawerItem from "./layout/DrawerItem";
 
 const MySlider = styled(Slider)(() => ({
@@ -123,6 +124,12 @@ export default function SliderTab(props) {
   const [latitude, setLatitude] = useRecoilState(atomLatitude);
   const [longitude, setLongitude] = useRecoilState(atomLongitude);
 
+  const setOpen = useSetRecoilState(atomSidebar);
+
+  const updateOpen = (e, data) => {
+    setOpen(true);
+  };
+
   const updateRange = (e, data) => {
     setRange(data);
   };
@@ -137,7 +144,7 @@ export default function SliderTab(props) {
   };
 
   return (
-    <List onClick={props.MyOpen}>
+    <List onClick={updateOpen}>
       <DrawerItem
         title="Date"
         icon={<EventIcon />}
