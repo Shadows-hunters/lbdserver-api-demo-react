@@ -1,13 +1,13 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import { IconButton } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Typography from "@mui/material/Typography";
-import React from "react";
 import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
-import { IconButton } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
+import { useRecoilValue } from 'recoil';
+import atomSidebar from '../../recoil/sidebar/atomSidebar';
 
 const MyAccordion = styled((props) => (
   <Accordion disableGutters elevation={0} square {...props} />
@@ -46,8 +46,14 @@ const MyAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 }));
 
 export default function DrawerItem(props) {
+  const [open, setOpen] = useState(false);
+  
+  const handleOpen = (e, isExpanded) => {
+    setOpen(isExpanded ? true : false);
+  };
+
   return (
-      <MyAccordion >
+      <MyAccordion expanded={Boolean(open & useRecoilValue(atomSidebar))} onChange={handleOpen}>
         <MyAccordionSummary sx={{pl:"0"}}>
           <IconButton>
             {props.icon}

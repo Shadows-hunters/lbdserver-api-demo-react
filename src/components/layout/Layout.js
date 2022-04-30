@@ -12,8 +12,9 @@ import { styled, useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { useRecoilState } from "recoil";
+import atomSidebar from "../../recoil/sidebar/atomSidebar";
 import SliderTab from "../SliderTab";
-import Viewer from "../Viewer/3dviewer";
 
 const drawerWidth = 300;
 
@@ -84,8 +85,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function Layout(props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [result, setResult] = React.useState();
+  const [open, setOpen] = useRecoilState(atomSidebar);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -93,10 +93,6 @@ export default function Layout(props) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const handleResult = (data) => {
-    setResult(data);
   };
 
   return (
@@ -133,7 +129,7 @@ export default function Layout(props) {
         </DrawerHeader>
         <Divider />
         <ListItem sx={{ p: "0" }}>
-          <SliderTab MyOpen={handleDrawerOpen} result={handleResult} />
+          <SliderTab />
         </ListItem>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
