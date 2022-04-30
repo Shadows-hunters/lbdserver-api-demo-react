@@ -3,6 +3,8 @@ import Typography from "@mui/material/Typography";
 import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React from "react";
+import { useRecoilValue } from "recoil";
+import withCalculation from "../../recoil/parameters";
 import "./ViewerLayout.css";
 
 const Model = ({ modelPath }) => {
@@ -17,33 +19,26 @@ const Model = ({ modelPath }) => {
 };
 
 export default function Viewer(props) {
-  const { title } = props;
-  const positionsList = props.result;
-
-  const Lights = () => {
-    const lichten = positionsList.map((light) => (
-      <directionalLight
-        position={light.map((x) => x * 100)}
-        intensity={0.1}
-        castShadow
-        shadow-mapSize-height={5000}
-        shadow-mapSize-width={5000}
-        shadow-camera-left={-100}
-        shadow-camera-right={100}
-        shadow-camera-top={100}
-        shadow-camera-bottom={-100}
-      />
-    ));
-    return <>{lichten}</>;
-  };
-
+  const lichten = useRecoilValue(withCalculation).map((light, index) => (
+    <directionalLight
+      key={index}
+      position={light.map((x) => x * 100)}
+      intensity={0.1}
+      castShadow
+      shadow-mapSize-height={5000}
+      shadow-mapSize-width={5000}
+      shadow-camera-left={-100}
+      shadow-camera-right={100}
+      shadow-camera-top={100}
+      shadow-camera-bottom={-100}
+    />
+  ));
+  
   return (
     <Stack spacing={1} sx={{ width: "100%", height: "80vh" }}>
-      <Typography component={"span"} variant="h5">
-        {title}
-      </Typography>
+      <Typography component={"span"} variant="h5"></Typography>
       <Canvas shadows>
-        <Lights />
+        {lichten}
         <Model
           castShadow
           receiveShadow
