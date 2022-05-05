@@ -1,8 +1,10 @@
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { Html, OrbitControls, Plane, useGLTF, Box } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import React, { Suspense, useRef } from "react";
+import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import React from "react";
+import { useRecoilValue } from "recoil";
+import withCalculation from "../../recoil/parameters";
 import "./ViewerLayout.css";
 
 const Model = ({ modelPath }) => {
@@ -16,56 +18,27 @@ const Model = ({ modelPath }) => {
   return <primitive object={gltf.scene} dispose={null} />;
 };
 
-const HTMLContent = ({ domContent, children, modelPath, positionY }) => {
-  const ref = useRef();
-  useFrame(() => (ref.current.rotation.y += 0.01));
-
-  return (
-    <group position={[0, positionY, 0]}>
-      <mesh ref={ref} position={[0, -35, 0]}>
-        <Model modelPath={modelPath} castShadow receiveShaodw />
-      </mesh>
-      <Html portal={domContent} fullscreen>
-        <div className="container"> {children} </div>
-      </Html>
-    </group>
-  );
-};
-
 export default function Viewer(props) {
-  const { title } = props;
-  const domContent = useRef();
-  const positionsList = props.result;
+  const lichten = useRecoilValue(withCalculation).map((light, index) => (
+    <directionalLight
+      key={index}
+      position={light.map((x) => x * 100)}
+      intensity={0.1}
+      castShadow
+      shadow-mapSize-height={5000}
+      shadow-mapSize-width={5000}
+      shadow-camera-left={-100}
+      shadow-camera-right={100}
+      shadow-camera-top={100}
+      shadow-camera-bottom={-100}
+    />
+  ));
   
-  const Lights = () => {
-    const lichten = positionsList.map((light) => (
-      <directionalLight
-        position={light}
-        intensity={0.1}
-        castShadow
-        shadow-mapSize-height={512}
-        shadow-mapSize-width={512}
-        shadow-camera-left={-20}
-        shadow-camera-right={20}
-        shadow-camera-top={20}
-        shadow-camera-bottom={-20}
-      />
-    ));
-    return (
-      <>
-        <ambientLight intensity={0.1} />
-        {lichten}
-      </>
-    );
-  };
-
   return (
     <Stack spacing={1} sx={{ width: "100%", height: "80vh" }}>
-      <Typography component={"span"} variant="h5">
-        {title}
-      </Typography>
-      <Canvas colorManagement shadows>
-        <Lights />
+      <Typography component={"span"} variant="h5"></Typography>
+      <Canvas shadows>
+        {lichten}
         <Model
           castShadow
           receiveShadow
@@ -78,7 +51,7 @@ export default function Viewer(props) {
           receiveShadow
           rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -1, 0]}
-          args={[1000, 1000]}
+          args={[100, 100]}
         >
           <meshStandardMaterial attach="material" color="white" />
         </Plane>
