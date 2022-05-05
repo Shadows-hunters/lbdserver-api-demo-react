@@ -1,6 +1,7 @@
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
+import * as THREE from 'three'
 import { Canvas } from "@react-three/fiber";
 import React from "react";
 import { useRecoilValue } from "recoil";
@@ -13,10 +14,39 @@ const Model = ({ modelPath }) => {
     if (node.isMesh) {
       node.castShadow = true;
       node.receiveShadow = true;
+      node.material = toonmaterial;
     }
   });
   return <primitive object={gltf.scene} dispose={null} />;
 };
+
+const threeTone = new THREE.TextureLoader().load('/threeTone.jpg')
+threeTone.minFilter = THREE.NearestFilter
+threeTone.magFilter = THREE.NearestFilter
+
+const fourTone = new THREE.TextureLoader().load('/fourTone.jpg')
+fourTone.minFilter = THREE.NearestFilter
+fourTone.magFilter = THREE.NearestFilter
+
+const fiveTone = new THREE.TextureLoader().load('/fiveTone.jpg')
+fiveTone.minFilter = THREE.NearestFilter
+fiveTone.magFilter = THREE.NearestFilter
+
+const tentones = new THREE.TextureLoader().load('/tentones.jpg')
+tentones.minFilter = THREE.NearestFilter
+tentones.magFilter = THREE.NearestFilter
+
+const toonmaterial: THREE.MeshToonMaterial = new THREE.MeshToonMaterial()
+
+const options = {
+  gradientMap: {
+    default: 'tentones',
+    threeTone: 'threeTone',
+    fourTone: 'fourTone',
+    fiveTone: 'fiveTone',
+    tentones: 'tentones',
+  }
+}
 
 export default function Viewer(props) {
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
