@@ -130,7 +130,7 @@ export default function SliderTab(props) {
     setOpen(true);
   };
 
-  const updateRange = (e, data) => {
+  const updateRange = (e, data) => {    
     setRange(data);
   };
   const updateInterval = (e, data) => {
