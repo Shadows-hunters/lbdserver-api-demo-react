@@ -4,7 +4,7 @@ import {
   atomDate,
   atomInterval,
   atomLatitude,
-  atomLongitude,
+  atomOffset,
   atomRange,
 } from "./";
 
@@ -16,7 +16,7 @@ const withCalculation = selector({
       get(atomRange)[0],
       get(atomRange)[1],
       get(atomLatitude),
-      get(atomLongitude),
+      get(atomOffset),
       get(atomInterval)
     );
   },

@@ -1,9 +1,10 @@
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
+import { OrbitControls, Plane, Sphere, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React from "react";
 import { useRecoilValue } from "recoil";
+import atomModel from "../../recoil/model/atomModel";
 import withCalculation from "../../recoil/parameters";
 import "./ViewerLayout.css";
 
@@ -20,32 +21,32 @@ const Model = ({ modelPath }) => {
 
 export default function Viewer(props) {
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
-    <directionalLight
-      key={index}
-      position={light.map((x) => x * 100)}
-      intensity={0.1}
-      castShadow
-      shadow-mapSize-height={5000}
-      shadow-mapSize-width={5000}
-      shadow-camera-left={-100}
-      shadow-camera-right={100}
-      shadow-camera-top={100}
-      shadow-camera-bottom={-100}
-    />
+    <mesh rotation={light.map((x) => x)}>
+      <Sphere position={[15, 0, 0]}>
+        <meshStandardMaterial color="blue" />
+      </Sphere>
+      <directionalLight
+        key={index}
+        position={[10, 0, 0]}
+        intensity={0.1}
+        castShadow
+        shadow-mapSize-height={5000}
+        shadow-mapSize-width={5000}
+        shadow-camera-left={-100}
+        shadow-camera-right={100}
+        shadow-camera-top={100}
+        shadow-camera-bottom={-100}
+      />
+    </mesh>
   ));
-  
+  const model = useRecoilValue(atomModel);
+
   return (
     <Stack spacing={1} sx={{ width: "100%", height: "80vh" }}>
       <Typography component={"span"} variant="h5"></Typography>
       <Canvas shadows>
         {lichten}
-        <Model
-          castShadow
-          receiveShadow
-          modelPath={
-            "https://raw.githubusercontent.com/LBD-Hackers/lbdserver-client-api/main/tests/artifacts/duplex.gltf"
-          }
-        />
+        <Model castShadow receiveShadow modelPath={model} />
         <OrbitControls />
         <Plane
           receiveShadow
