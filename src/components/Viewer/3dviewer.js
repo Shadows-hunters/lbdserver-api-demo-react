@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { OrbitControls, Plane, Sphere, useGLTF } from "@react-three/drei";
+import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React from "react";
 import { useRecoilValue } from "recoil";
@@ -22,12 +22,9 @@ const Model = ({ modelPath }) => {
 export default function Viewer(props) {
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
     <mesh rotation={light.map((x) => x)}>
-      <Sphere position={[15, 0, 0]}>
-        <meshStandardMaterial color="blue" />
-      </Sphere>
       <directionalLight
         key={index}
-        position={[10, 0, 0]}
+        position={[20, 0, 0]}
         intensity={0.1}
         castShadow
         shadow-mapSize-height={5000}
