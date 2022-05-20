@@ -12,7 +12,7 @@ app.use(express.json());
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 app.post("/positions", (req, res) => {
-  const { date, start, end, latitude, longitude, interval } = req.body;
+  const { date, start, end, latitude, offset, interval } = req.body;
 
   if (!date) {
     res.status(418).send({ message: "date needed!" });
@@ -26,7 +26,7 @@ app.post("/positions", (req, res) => {
   if (!latitude) {
     res.status(418).send({ message: "latitude needed!" });
   }
-  if (!longitude) {
+  if (!offset) {
     res.status(418).send({ message: "longitude needed!" });
   }
   if (!interval) {
@@ -35,13 +35,11 @@ app.post("/positions", (req, res) => {
 
   res
     .status(200)
-    .send(
-      formulas.sunPositions(date, start, end, latitude, longitude, interval)
-    );
+    .send(formulas.sunPositions(date, start, end, latitude, offset, interval));
 });
 
 app.post("/map", (req, res) => {
-  const { city, latitude, longitude } = req.body;
+  const { city, latitude, longitude, forced } = req.body;
 
   if (!city) {
     res.status(418).send({ message: "city needed!" });
@@ -53,18 +51,45 @@ app.post("/map", (req, res) => {
     res.status(418).send({ message: "longitude needed!" });
   }
 
-//   let newData = { [city]: };
+  //   let newData = { [city]: };
 
   var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
   var myObject = JSON.parse(data);
-  myObject[city] =  [latitude, longitude]
-//   myObject.push(newData);
 
+  // check if alrealdy defined
+  if (forced != true) {
+    if (city in myObject) {
+      res
+        .status(423)
+        .send({ message: "city already defined, prop 'forced':true " });
+    }
+  }
+
+  // add to JSON
+  myObject[city] = [latitude, longitude];
   fs.writeFile(
     "public/map_data/Cleaned BE arr.json",
     JSON.stringify(myObject),
     (err) => {
-      res.status(200).send("done");
+      res.status(200).send({ message: "done" });
     }
   );
+});
+
+app.get("/map", (req, res) => {
+  const { city } = req.body;
+  if (!city) {
+    res.status(418).send({ message: "city needed!" });
+  }
+
+  var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
+  var myObject = JSON.parse(data);
+
+  // check if in list
+  if (!(city in myObject)) {
+    res.status(404).send({ message: "city not found" });
+  }
+
+  // send back
+  res.status(200).send(myObject[city]);
 });
