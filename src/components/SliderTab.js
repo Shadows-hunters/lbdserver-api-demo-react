@@ -2,26 +2,32 @@ import AvTimerIcon from "@mui/icons-material/AvTimer";
 import EventIcon from "@mui/icons-material/Event";
 import GrainIcon from "@mui/icons-material/Grain";
 import MapIcon from "@mui/icons-material/Map";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DateAdapter from "@mui/lab/AdapterDayjs";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
   Box,
+  Divider,
   FormControlLabel,
+  IconButton,
   Slider,
   SliderThumb,
   Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import atomModel from "../recoil/model/atomModel";
 import {
   atomDate,
   atomInterval,
   atomLatitude,
-  atomLongitude,
+  atomOffset,
   atomPass,
   atomRange,
 } from "../recoil/parameters";
@@ -131,14 +137,14 @@ export default function SliderTab(props) {
   const [range, setRange] = useRecoilState(atomRange);
   const [interval, setInterval] = useRecoilState(atomInterval);
   const [latitude, setLatitude] = useRecoilState(atomLatitude);
-  const [longitude, setLongitude] = useRecoilState(atomLongitude);
+  const [offset, setOffset] = useRecoilState(atomOffset);
 
   // copy atom to cache for use while passing is set of
   const [myDate, setMyDate] = useState(date);
   const [myRange, setMyRange] = useState(range);
   const [myInterval, setMyInterval] = useState(interval);
   const [myLatitude, setMyLatitude] = useState(latitude);
-  const [myLongitude, setMyLongitude] = useState(longitude);
+  const [myOffset, setMyOffset] = useState(offset);
 
   const setOpen = useSetRecoilState(atomSidebar);
 
@@ -165,11 +171,11 @@ export default function SliderTab(props) {
     }
     setMyLatitude(e.target.value);
   };
-  const updateLongitude = (e) => {
+  const updateOffset = (e) => {
     if (pass) {
-      setLongitude(e.target.value);
+      setOffset(e.target.value);
     }
-    setMyLongitude(e.target.value);
+    setMyOffset(e.target.value);
   };
 
   const updatePass = (e) => {
@@ -182,9 +188,28 @@ export default function SliderTab(props) {
       setRange(myRange);
       setInterval(myInterval);
       setLatitude(myLatitude);
-      setLongitude(myLongitude);
+      setOffset(myOffset);
     }
   };
+
+  // setter function for model URL
+  const setModel = useSetRecoilState(atomModel);
+
+  const newModel = (e) => {
+    const uploadedFile = e.target.files[0];
+    const url = URL.createObjectURL(uploadedFile);
+    setModel(url);
+  };
+
+  const newModelUrl = (e) => {
+    var myUrl = document.getElementById("myUrl").value;
+    console.log(myUrl);
+    setModel(myUrl);
+  };
+
+  const Input = styled("input")({
+    display: "none",
+  });
 
   return (
     <List onClick={updateOpen}>
@@ -233,9 +258,9 @@ export default function SliderTab(props) {
               onChange={updateLatitude}
             />
             <TextField
-              label="Longitude"
-              value={myLongitude}
-              onChange={updateLongitude}
+              label="Building orientation"
+              value={myOffset}
+              onChange={updateOffset}
             />
           </Box>
         }
@@ -256,6 +281,31 @@ export default function SliderTab(props) {
           />
         }
       />
+      <Divider />
+      <Box sx={{ ml: "10px", mt: "10px", mb: "7px" }}>
+        <label htmlFor="icon-button-file">
+          <Input
+            accept=".gltf, .glb"
+            id="icon-button-file"
+            type="file"
+            onChange={newModel}
+            sx={{ mt: "10px" }}
+          />
+          <IconButton component="span" sx={{ mt: "10px", mr: "10px" }}>
+            <UploadFileIcon />
+          </IconButton>
+        </label>
+        <TextField id="myUrl" label="or enter URL" variant="standard" />
+        <IconButton
+          component="span"
+          sx={{ mt: "10px", mr: "10px" }}
+          onClick={newModelUrl}
+        >
+          <TaskAltIcon />
+        </IconButton>
+        <Typography sx={{ ml: "50px", mt: "10px" }} display="block" variant="caption">Accepts .gltf and .glb files</Typography>
+      </Box>
+      <Divider />
       <Box sx={{ width: "100px", ml: "70px", mt: "10px" }}>
         <FormControlLabel
           control={<Switch checked={pass} onChange={updatePass} />}

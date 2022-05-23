@@ -95,7 +95,7 @@ export default function Layout(props) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -130,7 +130,7 @@ export default function Layout(props) {
           <SliderTab />
         </ListItem>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1}}>
         <DrawerHeader />
         {props.children}
       </Box>
