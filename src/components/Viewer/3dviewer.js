@@ -1,11 +1,12 @@
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
+import { GradientTexture, OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import withCalculation from "../../recoil/parameters";
 import "./ViewerLayout.css";
+import * as THREE from 'three';
 
 const Model = ({ modelPath }) => {
   const gltf = useGLTF(modelPath, true);
@@ -17,6 +18,8 @@ const Model = ({ modelPath }) => {
   });
   return <primitive object={gltf.scene} dispose={null} />;
 };
+
+const Intensiteit = (100/withCalculation.length);
 
 export default function Viewer(props) {
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
@@ -33,11 +36,23 @@ export default function Viewer(props) {
       shadow-camera-bottom={-100}
     />
   ));
+
+  const renderer = new THREE.WebGLRenderer({alpha: true,preserveDrawingBuffer: true });
+
+  function saveImage() {
+    const canvas =  document.getElementsByTagName("canvas")[0]
+    const image = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = image.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+    a.download="image.png"
+    a.click();
+  }
   
   return (
     <Stack spacing={1} sx={{ width: "100%", height: "80vh" }}>
       <Typography component={"span"} variant="h5"></Typography>
-      <Canvas shadows>
+      <button onClick={saveImage}>Save image</button>
+      <Canvas shadows gl={{ preserveDrawingBuffer: true }}>
         {lichten}
         <Model
           castShadow
@@ -51,9 +66,9 @@ export default function Viewer(props) {
           receiveShadow
           rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -1, 0]}
-          args={[100, 100]}
-        >
-          <meshStandardMaterial attach="material" color="white" />
+          args={[100, 100]}>
+          <meshStandardMaterial attach="material" color="pink">
+          </meshStandardMaterial>
         </Plane>
       </Canvas>
     </Stack>
