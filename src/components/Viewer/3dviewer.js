@@ -1,4 +1,9 @@
-import { Box, Button, CircularProgress } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import ImageIcon from "@mui/icons-material/Image";
+import { Box, CircularProgress } from "@mui/material";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import Typography from "@mui/material/Typography";
 import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
@@ -6,7 +11,13 @@ import React, { Suspense, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import atomModel from "../../recoil/model/atomModel";
-import withCalculation from "../../recoil/parameters";
+import withCalculation, {
+  atomDate,
+  atomInterval,
+  atomLatitude,
+  atomOffset,
+  atomRange,
+} from "../../recoil/parameters";
 import "./ViewerLayout.css";
 
 const Model = ({ modelPath }) => {
@@ -32,11 +43,13 @@ const Waiting = () => {
 };
 
 export default function Viewer(props) {
+  const Intensiteit = 1 / useRecoilValue(withCalculation).length;
+
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
     <mesh key={index} rotation={light.map((x) => x)}>
       <directionalLight
         position={[20, 0, 0]}
-        intensity={0.1}
+        intensity={Intensiteit}
         castShadow
         shadow-mapSize-height={5000}
         shadow-mapSize-width={5000}
@@ -72,19 +85,45 @@ export default function Viewer(props) {
     }
   }
 
+  var myObject = {
+    date: useRecoilValue(atomDate),
+    timespan: useRecoilValue(atomRange),
+    latitude: useRecoilValue(atomLatitude),
+    offset: useRecoilValue(atomOffset),
+    interval: useRecoilValue(atomInterval),
+  };
+
   const exportIt = (e) => {
     myExporter.parse(meshRef.current, function (gltf) {
+      gltf["ShadowHunting"] = myObject;
       console.log(gltf);
       download(JSON.stringify(gltf), "mine.gltf");
     });
   };
 
+  function saveImage() {
+    const canvas = document.getElementsByTagName("canvas")[0];
+    const image = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = image.replace(
+      /^data:image\/[^;]/,
+      "data:application/octet-stream"
+    );
+    a.download = "image.png";
+    a.click();
+  }
+
   return (
-    <Box sx={{ ml: "55px", width: "calc(100vw - 55px)" }}>
-      {/* height: 'calc(100vh - 64px)'  */}
+    <Box
+      sx={{
+        ml: "55px",
+        width: "calc(100vw - 55px)",
+        height: "calc(100vh - 64px)",
+      }}
+    >
       <Suspense fallback={<Waiting />}>
         <Typography component={"span"} variant="h5"></Typography>
-        <Canvas shadows id="myScene">
+        <Canvas shadows id="myScene" gl={{ preserveDrawingBuffer: true }}>
           <mesh ref={meshRef}>
             {lichten}
             <Model castShadow receiveShadow modelPath={model} />
@@ -100,7 +139,24 @@ export default function Viewer(props) {
           </mesh>
         </Canvas>
       </Suspense>
-      <Button onClick={exportIt}>lol</Button>
+      <SpeedDial
+        ariaLabel="SpeedDial basic example"
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
+        icon={<SpeedDialIcon />}
+      >
+        <SpeedDialAction
+          key="Download image"
+          tooltipTitle="Download image"
+          onClick={saveImage}
+          icon={<ImageIcon />}
+        />
+        <SpeedDialAction
+          key="Download gltf"
+          tooltipTitle="Download gltf"
+          onClick={exportIt}
+          icon={<AttachFileIcon />}
+        />
+      </SpeedDial>
     </Box>
   );
 }
