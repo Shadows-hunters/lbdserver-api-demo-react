@@ -1,8 +1,8 @@
-import { Stack } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import React from "react";
+import React, { Suspense } from "react";
 import { useRecoilValue } from "recoil";
 import atomModel from "../../recoil/model/atomModel";
 import withCalculation from "../../recoil/parameters";
@@ -19,11 +19,21 @@ const Model = ({ modelPath }) => {
   return <primitive object={gltf.scene} dispose={null} />;
 };
 
+const Waiting = () => {
+  return (
+    <Box>
+      <Typography variant="h6" textAlign="center" justifyItems="center">
+        Loading.... <br />
+        <CircularProgress sx={{ mt: "20px" }} />
+      </Typography>
+    </Box>
+  );
+};
+
 export default function Viewer(props) {
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
-    <mesh rotation={light.map((x) => x)}>
+    <mesh key={index} rotation={light.map((x) => x)}>
       <directionalLight
-        key={index}
         position={[20, 0, 0]}
         intensity={0.1}
         castShadow
@@ -39,21 +49,23 @@ export default function Viewer(props) {
   const model = useRecoilValue(atomModel);
 
   return (
-    <Stack spacing={1} sx={{ width: "100%", height: "80vh" }}>
-      <Typography component={"span"} variant="h5"></Typography>
-      <Canvas shadows>
-        {lichten}
-        <Model castShadow receiveShadow modelPath={model} />
-        <OrbitControls />
-        <Plane
-          receiveShadow
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, -1, 0]}
-          args={[100, 100]}
-        >
-          <meshStandardMaterial attach="material" color="white" />
-        </Plane>
-      </Canvas>
-    </Stack>
+    <Box sx={{ width: "100%", height: "80vh" }}>
+      <Suspense fallback={<Waiting />}>
+        <Typography component={"span"} variant="h5"></Typography>
+        <Canvas shadows>
+          {lichten}
+          <Model castShadow receiveShadow modelPath={model} />
+          <OrbitControls />
+          <Plane
+            receiveShadow
+            rotation={[-Math.PI / 2, 0, 0]}
+            position={[0, -1, 0]}
+            args={[100, 100]}
+          >
+            <meshStandardMaterial attach="material" color="white" />
+          </Plane>
+        </Canvas>
+      </Suspense>
+    </Box>
   );
 }

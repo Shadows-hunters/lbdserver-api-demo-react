@@ -2,10 +2,11 @@ import AvTimerIcon from "@mui/icons-material/AvTimer";
 import EventIcon from "@mui/icons-material/Event";
 import GrainIcon from "@mui/icons-material/Grain";
 import MapIcon from "@mui/icons-material/Map";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DateAdapter from "@mui/lab/AdapterDayjs";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {
   Box,
   Divider,
@@ -15,7 +16,6 @@ import {
   SliderThumb,
   Switch,
   TextField,
-  Typography,
 } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
@@ -200,6 +200,12 @@ export default function SliderTab(props) {
     setModel(url);
   };
 
+  const newModelUrl = (e) => {
+    var myUrl = document.getElementById("myUrl").value;
+    console.log(myUrl);
+    setModel(myUrl);
+  };
+
   const Input = styled("input")({
     display: "none",
   });
@@ -282,14 +288,20 @@ export default function SliderTab(props) {
             id="icon-button-file"
             type="file"
             onChange={newModel}
+            sx={{ mt: "10px" }}
           />
-          <IconButton component="span">
+          <IconButton component="span" sx={{ mt: "10px", mr: "10px" }}>
             <UploadFileIcon />
           </IconButton>
         </label>
-        <Typography sx={{ ml: "10px" }} display="inline">
-          Upload file
-        </Typography>
+        <TextField id="myUrl" label="or enter URL" variant="standard" />
+        <IconButton
+          component="span"
+          sx={{ mt: "10px", mr: "10px" }}
+          onClick={newModelUrl}
+        >
+          <TaskAltIcon />
+        </IconButton>
       </Box>
       <Divider />
       <Box sx={{ width: "100px", ml: "70px", mt: "10px" }}>
