@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { GradientTexture, OrbitControls, Plane, useGLTF } from "@react-three/drei";
+import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React from "react";
 import { useRecoilValue } from "recoil";
@@ -23,18 +23,18 @@ const Model = ({ modelPath }) => {
   return <primitive object={gltf.scene} dispose={null} />;
 };
 
-const Intensiteit = (100/withCalculation.length);
-
 const actions = [
   { icon: <SaveIcon />, name: 'Save as PNG'},
 ];
 
 export default function Viewer(props) {
+  const Intensiteit = (1/useRecoilValue(withCalculation).length);
+
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
     <directionalLight
       key={index}
       position={light.map((x) => x * 100)}
-      intensity={0.1}
+      intensity={Intensiteit}
       castShadow
       shadow-mapSize-height={5000}
       shadow-mapSize-width={5000}
@@ -61,6 +61,7 @@ export default function Viewer(props) {
       <Typography component={"span"} variant="h5"></Typography>
       <Canvas shadows gl={{ preserveDrawingBuffer: true }}>
         {lichten}
+        <ambientLight intensity={0.1}/>
         <Model
           castShadow
           receiveShadow
@@ -91,7 +92,7 @@ export default function Viewer(props) {
         onClick={saveImage}
         />
         ))}
-</SpeedDial>
+        </SpeedDial>
     </Stack>
   );
 }
