@@ -16,6 +16,7 @@ import {
   SliderThumb,
   Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
@@ -257,7 +258,7 @@ export default function SliderTab(props) {
               onChange={updateLatitude}
             />
             <TextField
-              label="Offset Angle"
+              label="Building orientation"
               value={myOffset}
               onChange={updateOffset}
             />
@@ -302,6 +303,7 @@ export default function SliderTab(props) {
         >
           <TaskAltIcon />
         </IconButton>
+        <Typography sx={{ ml: "50px", mt: "10px" }} display="block" variant="caption">Accepts .gltf and .glb files</Typography>
       </Box>
       <Divider />
       <Box sx={{ width: "100px", ml: "70px", mt: "10px" }}>
