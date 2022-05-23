@@ -7,6 +7,10 @@ import { useRecoilValue } from "recoil";
 import withCalculation from "../../recoil/parameters";
 import "./ViewerLayout.css";
 import * as THREE from 'three';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import SaveIcon from '@mui/icons-material/Save';
 
 const Model = ({ modelPath }) => {
   const gltf = useGLTF(modelPath, true);
@@ -20,6 +24,10 @@ const Model = ({ modelPath }) => {
 };
 
 const Intensiteit = (100/withCalculation.length);
+
+const actions = [
+  { icon: <SaveIcon />, name: 'Save as PNG'},
+];
 
 export default function Viewer(props) {
   const lichten = useRecoilValue(withCalculation).map((light, index) => (
@@ -51,7 +59,6 @@ export default function Viewer(props) {
   return (
     <Stack spacing={1} sx={{ width: "100%", height: "80vh" }}>
       <Typography component={"span"} variant="h5"></Typography>
-      <button onClick={saveImage}>Save image</button>
       <Canvas shadows gl={{ preserveDrawingBuffer: true }}>
         {lichten}
         <Model
@@ -71,6 +78,20 @@ export default function Viewer(props) {
           </meshStandardMaterial>
         </Plane>
       </Canvas>
+      <SpeedDial
+       ariaLabel="SpeedDial basic example"
+        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+        icon={<SpeedDialIcon />}
+        >
+        {actions.map((action) => (
+        <SpeedDialAction
+        key={action.name}
+        icon={action.icon}
+        tooltipTitle={action.name}
+        onClick={saveImage}
+        />
+        ))}
+</SpeedDial>
     </Stack>
   );
 }
