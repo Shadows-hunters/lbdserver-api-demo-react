@@ -1,4 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ImageIcon from "@mui/icons-material/Image";
 import { Box, CircularProgress } from "@mui/material";
 import SpeedDial from "@mui/material/SpeedDial";
@@ -8,16 +9,16 @@ import Typography from "@mui/material/Typography";
 import { OrbitControls, Plane, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React, { Suspense, useRef } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
+import atomGltfModel from "../../recoil/model/atomGltfModel";
 import atomModel from "../../recoil/model/atomModel";
-import withCalculation, {
-  atomDate,
-  atomInterval,
-  atomLatitude,
-  atomOffset,
-  atomRange,
-} from "../../recoil/parameters";
+import withCalculation from "../../recoil/parameters";
+import {
+  atomImageDownload,
+  atomModelDownload,
+  atomPodUpload,
+} from "../../recoil/pop-ups";
 import "./ViewerLayout.css";
 
 const Model = ({ modelPath }) => {
@@ -64,54 +65,29 @@ export default function Viewer(props) {
 
   const myExporter = new GLTFExporter();
   const meshRef = useRef();
-
-  function download(data, filename, type) {
-    var file = new Blob([data], { type: type });
-    if (window.navigator.msSaveOrOpenBlob)
-      // IE10+
-      window.navigator.msSaveOrOpenBlob(file, filename);
-    else {
-      // Others
-      var a = document.createElement("a"),
-        url = URL.createObjectURL(file);
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      }, 0);
-    }
-  }
-
-  var myObject = {
-    date: useRecoilValue(atomDate),
-    timespan: useRecoilValue(atomRange),
-    latitude: useRecoilValue(atomLatitude),
-    offset: useRecoilValue(atomOffset),
-    interval: useRecoilValue(atomInterval),
-  };
+  const setGltfModel = useSetRecoilState(atomGltfModel);
 
   const exportIt = (e) => {
     myExporter.parse(meshRef.current, function (gltf) {
-      gltf["ShadowHunting"] = myObject;
-      console.log(gltf);
-      download(JSON.stringify(gltf), "mine.gltf");
+      setGltfModel(JSON.stringify(gltf));
     });
   };
 
-  function saveImage() {
-    const canvas = document.getElementsByTagName("canvas")[0];
-    const image = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
-    a.href = image.replace(
-      /^data:image\/[^;]/,
-      "data:application/octet-stream"
-    );
-    a.download = "image.png";
-    a.click();
-  }
+  const podUpload = useSetRecoilState(atomPodUpload);
+  const imageDownload = useSetRecoilState(atomImageDownload);
+  const modelDownload = useSetRecoilState(atomModelDownload);
+
+  const updatePodUpload = () => {
+    exportIt();
+    podUpload(true);
+  };
+  const updateImageDownload = () => {
+    imageDownload(true);
+  };
+  const updateModelDownload = () => {
+    exportIt();
+    modelDownload(true);
+  };
 
   return (
     <Box
@@ -147,14 +123,20 @@ export default function Viewer(props) {
         <SpeedDialAction
           key="Download image"
           tooltipTitle="Download image"
-          onClick={saveImage}
+          onClick={updateImageDownload}
           icon={<ImageIcon />}
         />
         <SpeedDialAction
           key="Download gltf"
           tooltipTitle="Download gltf"
-          onClick={exportIt}
+          onClick={updateModelDownload}
           icon={<AttachFileIcon />}
+        />
+        <SpeedDialAction
+          key="Upload gltf to solid pod"
+          tooltipTitle="Upload gltf to solid pod"
+          onClick={updatePodUpload}
+          icon={<CloudUploadIcon />}
         />
       </SpeedDial>
     </Box>
