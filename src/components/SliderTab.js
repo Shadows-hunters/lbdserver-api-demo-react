@@ -33,6 +33,7 @@ import {
 } from "../recoil/parameters";
 import atomSidebar from "../recoil/sidebar/atomSidebar";
 import DrawerItem from "./layout/DrawerItem";
+import Popup_window from "./map/Popup_window.js";
 
 const MySlider = styled(Slider)(() => ({
   color: "#52af77",
@@ -262,6 +263,7 @@ export default function SliderTab(props) {
               value={myOffset}
               onChange={updateOffset}
             />
+            <Popup_window/>
           </Box>
         }
       />
