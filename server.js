@@ -93,3 +93,17 @@ app.get("/map", (req, res) => {
   // send back
   res.status(200).send(myObject[city]);
 });
+
+app.get("/mapAlles", (req, res) => {
+
+  var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
+
+  var myObject = JSON.parse(data);
+
+
+
+  // send back
+
+  res.status(200).send(myObject);
+
+});

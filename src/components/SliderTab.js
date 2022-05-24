@@ -9,12 +9,14 @@ import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
   Box,
+  Button,
   Divider,
   FormControlLabel,
   IconButton,
   Slider,
   SliderThumb,
   Switch,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -33,6 +35,7 @@ import {
 } from "../recoil/parameters";
 import atomSidebar from "../recoil/sidebar/atomSidebar";
 import DrawerItem from "./layout/DrawerItem";
+import Popup_window from "./map/Popup_window.js";
 
 const MySlider = styled(Slider)(() => ({
   color: "#52af77",
@@ -211,6 +214,13 @@ export default function SliderTab(props) {
     display: "none",
   });
 
+  // popup definition
+  const [isOpen, setIsOpen] = useState(false);
+
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <List onClick={updateOpen}>
       <DrawerItem
@@ -247,21 +257,25 @@ export default function SliderTab(props) {
           />
         }
       />
+
       <DrawerItem
         title="Location"
         icon={<MapIcon />}
         body={
-          <Box sx={{ "& .MuiTextField-root": { m: 1 }, width: "130px" }}>
-            <TextField
-              label="Latitude"
-              value={myLatitude}
-              onChange={updateLatitude}
-            />
-            <TextField
-              label="Building orientation"
-              value={myOffset}
-              onChange={updateOffset}
-            />
+          <Box>
+            <Stack spacing={2}>
+              <TextField
+                label="Latitude"
+                value={myLatitude}
+                onChange={updateLatitude}
+              />
+              <TextField
+                label="Building orientation"
+                value={myOffset}
+                onChange={updateOffset}
+              />
+              <Popup_window></Popup_window>
+            </Stack>
           </Box>
         }
       />
@@ -303,7 +317,13 @@ export default function SliderTab(props) {
         >
           <TaskAltIcon />
         </IconButton>
-        <Typography sx={{ ml: "50px", mt: "10px" }} display="block" variant="caption">Accepts .gltf and .glb files</Typography>
+        <Typography
+          sx={{ ml: "50px", mt: "10px" }}
+          display="block"
+          variant="caption"
+        >
+          Accepts .gltf and .glb files
+        </Typography>
       </Box>
       <Divider />
       <Box sx={{ width: "100px", ml: "70px", mt: "10px" }}>
