@@ -4,20 +4,19 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import  * as React from "react";
+import * as React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import atomGltfModel from "../../recoil/model/atomGltfModel";
 import {
-    atomDate,
-    atomInterval,
-    atomLatitude,
-    atomOffset,
-    atomRange
+  atomDate,
+  atomInterval,
+  atomLatitude,
+  atomOffset,
+  atomRange,
 } from "../../recoil/parameters";
 import { atomPodUpload } from "../../recoil/pop-ups";
 
 export default function PodUpload() {
-
   const [open, setOpen] = useRecoilState(atomPodUpload);
   const handleClose = () => {
     setOpen(false);
@@ -34,21 +33,21 @@ export default function PodUpload() {
 
   const gltf = useRecoilValue(atomGltfModel);
 
-  function upload(data, filename) {
+  function upload(data) {
     var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    
+    myHeaders.append("Content-Type", "model/gltf+json");
+
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: data,
-      redirect: 'follow'
+      redirect: "follow",
     };
-    
-    fetch("http://localhost:5000/Student/data/", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+
+    fetch(myUrl, requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
   }
 
   var myObject = {
@@ -62,7 +61,7 @@ export default function PodUpload() {
   const exportIt = (e) => {
     const myGltf = JSON.parse(gltf);
     myGltf["ShadowHunting"] = myObject;
-    upload(JSON.stringify(myGltf), ".gltf");
+    upload(JSON.stringify(myGltf));
   };
 
   return (

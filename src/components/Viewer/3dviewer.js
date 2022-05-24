@@ -78,6 +78,7 @@ export default function Viewer(props) {
   const modelDownload = useSetRecoilState(atomModelDownload);
 
   const updatePodUpload = () => {
+    exportIt();
     podUpload(true);
   };
   const updateImageDownload = () => {
