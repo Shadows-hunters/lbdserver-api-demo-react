@@ -27,6 +27,7 @@ import {
   atomDate,
   atomInterval,
   atomLatitude,
+  atomMyLatitude,
   atomOffset,
   atomPass,
   atomRange,
@@ -137,15 +138,16 @@ export default function SliderTab(props) {
   const [date, setDate] = useRecoilState(atomDate);
   const [range, setRange] = useRecoilState(atomRange);
   const [interval, setInterval] = useRecoilState(atomInterval);
-  const [latitude, setLatitude] = useRecoilState(atomLatitude);
   const [offset, setOffset] = useRecoilState(atomOffset);
+  const setLatitude = useSetRecoilState(atomLatitude);
+  
 
-  // copy atom to cache for use while passing is set of
+  // copy atom to cache for use while passing is set off
   const [myDate, setMyDate] = useState(date);
   const [myRange, setMyRange] = useState(range);
   const [myInterval, setMyInterval] = useState(interval);
-  const [myLatitude, setMyLatitude] = useState(latitude);
   const [myOffset, setMyOffset] = useState(offset);
+  const [myLatitude, setMyLatitude] = useRecoilState(atomMyLatitude);
 
   const setOpen = useSetRecoilState(atomSidebar);
 
@@ -263,7 +265,7 @@ export default function SliderTab(props) {
               value={myOffset}
               onChange={updateOffset}
             />
-            <Popup_window/>
+            <Popup_window />
           </Box>
         }
       />
@@ -305,7 +307,13 @@ export default function SliderTab(props) {
         >
           <TaskAltIcon />
         </IconButton>
-        <Typography sx={{ ml: "50px", mt: "10px" }} display="block" variant="caption">Accepts .gltf and .glb files</Typography>
+        <Typography
+          sx={{ ml: "50px", mt: "10px" }}
+          display="block"
+          variant="caption"
+        >
+          Accepts .gltf and .glb files
+        </Typography>
       </Box>
       <Divider />
       <Box sx={{ width: "100px", ml: "70px", mt: "10px" }}>

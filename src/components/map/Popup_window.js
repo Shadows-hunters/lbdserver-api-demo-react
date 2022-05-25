@@ -5,13 +5,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { atomLatitude, atomStad } from "../../recoil/parameters";
+import { useSetRecoilState } from "recoil";
+import { atomMyLatitude } from "../../recoil/parameters";
 import SearchLocation from "./Search_Location";
 
 export default function Popup_window() {
-  var stad = useRecoilValue(atomStad)
-
   var newLocation = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -22,7 +20,7 @@ export default function Popup_window() {
       longitude: parseInt(longitude),
       forced: true,
     });
-    console.log(raw)
+    console.log(raw);
 
     var requestOptions = {
       method: "POST",
@@ -59,12 +57,10 @@ export default function Popup_window() {
   };
 
   const test = (e) => {
-    console.log(e)
-    console.log(e.latitude)
+    console.log(e);
+    console.log(e.latitude);
     setAtomLatitude(e.latitude);
   };
-
-
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -83,7 +79,7 @@ export default function Popup_window() {
     setOpen(false);
   };
 
-  const setAtomLatitude = useSetRecoilState(atomLatitude);
+  const setAtomLatitude = useSetRecoilState(atomMyLatitude);
 
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
