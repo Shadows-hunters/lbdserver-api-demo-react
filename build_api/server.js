@@ -1,4 +1,4 @@
-const formulas = require("./src/components/calculations/formulas");
+const formulas = require("./formulas");
 
 var fs = require("fs");
 const cors = require("cors");
@@ -53,7 +53,7 @@ app.post("/map", (req, res) => {
 
   //   let newData = { [city]: };
 
-  var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
+  var data = fs.readFileSync("./Cleaned BE arr.json");
   var myObject = JSON.parse(data);
 
   // check if alrealdy defined
@@ -68,7 +68,7 @@ app.post("/map", (req, res) => {
   // add to JSON
   myObject[city] = [latitude, longitude];
   fs.writeFile(
-    "public/map_data/Cleaned BE arr.json",
+    "./Cleaned BE arr.json",
     JSON.stringify(myObject),
     (err) => {
       res.status(200).send({ message: "done" });
@@ -82,7 +82,7 @@ app.get("/map", (req, res) => {
     res.status(418).send({ message: "city needed!" });
   }
 
-  var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
+  var data = fs.readFileSync("./Cleaned BE arr.json");
   var myObject = JSON.parse(data);
 
   // check if in list
@@ -96,7 +96,7 @@ app.get("/map", (req, res) => {
 
 
 app.get("/mapAlles", (req, res) => {
-  var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");
+  var data = fs.readFileSync("./Cleaned BE arr.json");
   var myObject = JSON.parse(data);
 
   // send back

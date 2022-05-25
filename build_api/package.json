@@ -3,16 +3,15 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-      "npm-run-all": "^4.1.5",
-      "suncalc": "^1.9.0",
-      "dayjs": "^1.11.0",
-      "express": "^4.17.3"
+        "cors": "^2.8.5",
+        "dayjs": "^1.11.0",
+        "express": "^4.17.3",
+        "npm-run-all": "^4.1.5",
+        "suncalc": "^1.9.0"
     },
     "scripts": {
-      "api": "serve",
-      "app": "node server.js",
-      "all": "npm-run-all --parallel api app"
+        "api": "serve",
+        "app": "node server.js",
+        "all": "npm-run-all --parallel api app"
     }
-    
-  }
-  
+}
