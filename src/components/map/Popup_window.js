@@ -5,19 +5,22 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { atomLatitude, atomPass } from "../../recoil/parameters";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { atomLatitude, atomStad } from "../../recoil/parameters";
 import SearchLocation from "./Search_Location";
 
 export default function Popup_window() {
+  var stad = useRecoilValue(atomStad)
+
   var newLocation = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
       city: myLocation,
-      latitude: parseInt(myLatitude),
+      latitude: parseInt(latitude),
       longitude: parseInt(longitude),
+      forced: true,
     });
 
     var requestOptions = {
@@ -38,52 +41,55 @@ export default function Popup_window() {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      city: myLocation,
+      city: document.getElementById("search-location-box").value,
     });
 
     var requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
 
-    fetch("http://localhost:8080/map", requestOptions)
+    fetch("http://localhost:8080/mapget", requestOptions)
       .then((response) => response.text())
-      .then((result) => setLatitude(result[1]))
+      .then((result) => test(JSON.parse(result)))
       .catch((error) => console.log("error", error));
   };
 
+  const test = (e) => {
+    console.log(e)
+    console.log(e.latitude)
+    setAtomLatitude(e.latitude);
+  };
+
+
+
   const [open, setOpen] = React.useState(false);
-  const setPass = useSetRecoilState(atomPass);
   const handleClickOpen = () => {
-    setPass(false);
     setOpen(true);
   };
   const handleClose = () => {
-    setPass(true);
     setOpen(false);
   };
   const handleClose2 = () => {
     newLocation();
-    setPass(true);
-    updatePass();
+    setAtomLatitude(latitude);
     setOpen(false);
   };
   const handleClose1 = () => {
     newLocation2();
-    setPass(true);
-    updatePass();
     setOpen(false);
   };
 
-  const [latitude, setLatitude] = useRecoilState(atomLatitude);
-  const [myLatitude, setMyLatitude] = useState(latitude);
+  const setAtomLatitude = useSetRecoilState(atomLatitude);
+
+  const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [myLocation, setLocation] = useState("Location 1");
 
   const updateLatitude = (e) => {
-    setMyLatitude(e.target.value);
+    setLatitude(e.target.value);
   };
 
   const updateLongitude = (e) => {
@@ -92,10 +98,6 @@ export default function Popup_window() {
 
   const updateLocation = (e) => {
     setLocation(e.target.value);
-  };
-
-  const updatePass = (e) => {
-    setLatitude(myLatitude);
   };
 
   return (
@@ -135,7 +137,7 @@ export default function Popup_window() {
             />
             <TextField
               label="Latitude"
-              value={myLatitude}
+              value={latitude}
               onChange={updateLatitude}
             />
             <TextField

@@ -76,7 +76,7 @@ app.post("/map", (req, res) => {
   );
 });
 
-app.get("/map", (req, res) => {
+app.post("/mapget", (req, res) => {
   const { city } = req.body;
   if (!city) {
     res.status(418).send({ message: "city needed!" });
@@ -90,10 +90,14 @@ app.get("/map", (req, res) => {
     res.status(404).send({ message: "city not found" });
   }
 
-  // send back
-  res.status(200).send(myObject[city]);
-});
+  const mijnStad = {
+    longitude: myObject[city][0],
+    latitude: myObject[city][1],
+  };
 
+  // send back
+  res.status(200).send(mijnStad);
+});
 
 app.get("/mapAlles", (req, res) => {
   var data = fs.readFileSync("public/map_data/Cleaned BE arr.json");

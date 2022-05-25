@@ -5,6 +5,7 @@ import atomInterval from "./atomInterval";
 import atomOffset from "./atomOffset";
 import atomLatitude from "./atomLatitude";
 import withCalculation from "./withCalculation";
+import atomStad from "./atomStad";
 
-export { atomDate, atomRange, atomInterval, atomOffset, atomLatitude, atomPass };
+export { atomStad, atomDate, atomRange, atomInterval, atomOffset, atomLatitude, atomPass };
 export default withCalculation;

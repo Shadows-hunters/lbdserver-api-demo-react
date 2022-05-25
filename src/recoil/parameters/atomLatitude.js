@@ -2,7 +2,7 @@ import { atom } from "recoil"
 
 const atomLatitude = atom({
   key: "atomLatitude",
-  default: "50.850346"
+  default: "0"
 })
 
 export default atomLatitude

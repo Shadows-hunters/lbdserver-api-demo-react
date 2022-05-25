@@ -1,6 +1,8 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
+import { useRecoilState } from "recoil";
+import { atomStad } from "../../recoil/parameters";
 
 export default function SearchLocation() {
   var [locatieslijst, setLocatieslijst] = useState({});
