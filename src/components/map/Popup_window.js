@@ -5,42 +5,105 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { atomLatitude, atomPass } from "../../recoil/parameters";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { atomLatitude, atomStad } from "../../recoil/parameters";
 import SearchLocation from "./Search_Location";
 
 export default function Popup_window() {
+  var stad = useRecoilValue(atomStad)
+
+  var newLocation = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      city: myLocation,
+      latitude: parseInt(latitude),
+      longitude: parseInt(longitude),
+      forced: true,
+    });
+    console.log(raw)
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:8080/map", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  var newLocation2 = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      city: document.getElementById("search-location-box").value,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:8080/mapget", requestOptions)
+      .then((response) => response.text())
+      .then((result) => test(JSON.parse(result)))
+      .catch((error) => console.log("error", error));
+  };
+
+  const test = (e) => {
+    console.log(e)
+    console.log(e.latitude)
+    setAtomLatitude(e.latitude);
+  };
+
+
+
   const [open, setOpen] = React.useState(false);
-  const setPass = useSetRecoilState(atomPass);
   const handleClickOpen = () => {
-    setPass(false);
     setOpen(true);
   };
   const handleClose = () => {
-    setPass(true);
-    updatePass();
     setOpen(false);
   };
-  const [latitude, setLatitude] = useRecoilState(atomLatitude);
-  const [myLatitude, setMyLatitude] = useState(latitude);
+  const handleClose2 = () => {
+    newLocation();
+    setAtomLatitude(latitude);
+    setOpen(false);
+  };
+  const handleClose1 = () => {
+    newLocation2();
+    setOpen(false);
+  };
+
+  const setAtomLatitude = useSetRecoilState(atomLatitude);
+
+  const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const [myLocation, setLocation] = useState("Location 1");
 
   const updateLatitude = (e) => {
-    setMyLatitude(e.target.value);
+    setLatitude(e.target.value);
   };
 
   const updateLongitude = (e) => {
     setLongitude(e.target.value);
   };
 
-  const updatePass = (e) => {
-    setLatitude(myLatitude);
-    // hier nog myLatitude en Longitude posten in database
+  const updateLocation = (e) => {
+    setLocation(e.target.value);
   };
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button sx={{ ml: "8px" }} variant="outlined" onClick={handleClickOpen}>
         Don't know exact location?
       </Button>
       <Dialog
@@ -56,10 +119,26 @@ export default function Popup_window() {
               yet, you can add it via coordinates once and we will save it so
               you can reuse it later form the database.
             </Typography>
-            <SearchLocation />
+            <Stack spacing={2} direction="row">
+              <SearchLocation />
+              <DialogActions>
+                <Button autoFocus onClick={handleClose1}>
+                  Save location
+                </Button>
+              </DialogActions>
+            </Stack>
+            <Typography>
+              If your location can not be found in the list, you can add it
+              here.
+            </Typography>
+            <TextField
+              label="Name Location"
+              value={myLocation}
+              onChange={updateLocation}
+            />
             <TextField
               label="Latitude"
-              value={myLatitude}
+              value={latitude}
               onChange={updateLatitude}
             />
             <TextField
@@ -70,9 +149,7 @@ export default function Popup_window() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
+          <Button onClick={handleClose2}>Add location to list</Button>
         </DialogActions>
       </Dialog>
     </div>
