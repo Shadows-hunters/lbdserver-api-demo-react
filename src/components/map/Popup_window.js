@@ -22,6 +22,7 @@ export default function Popup_window() {
       longitude: parseInt(longitude),
       forced: true,
     });
+    console.log(raw)
 
     var requestOptions = {
       method: "POST",
