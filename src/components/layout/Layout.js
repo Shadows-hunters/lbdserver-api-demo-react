@@ -112,7 +112,7 @@ export default function Layout(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Shadow Hunting
           </Typography>
         </Toolbar>
       </AppBar>
