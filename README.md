@@ -8,7 +8,7 @@ The project contains two server:
 ### Installation:
 
 - download the repository files
-- move the **build_api** folder insto another source folder
+- move the **build_api** folder into another source folder
 - install packages inside **both folders**: `npm i`
 - start api server: `node server.js`
 - start main app: `npm start`
@@ -29,7 +29,7 @@ This is, a this point in the project, more of a preview feature to approve the s
 #### Export speeddial:
 Your scene setup can be exported to an image, which donwloads your viewport as a png. Your main focus is probably to create a beautiful, presention-ready document, therefore you get the possibility to export the whole scene, inclusive lights positions, as a gltf, localy or upload is to an adress. The last option is currently under development and only creates POST requests without authentification settings. (was tested on a solid pod)
 
-The **ressources** folder contains a blender test file with a cell-shading texture if you want to experiment.
+The **resources** folder contains a blender test file with a cell-shading texture if you want to experiment.
 
 ## production
 
